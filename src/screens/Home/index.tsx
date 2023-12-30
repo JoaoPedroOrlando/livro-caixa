@@ -1,5 +1,5 @@
 import React from "react";
-import {View, Text, TouchableOpacity} from "react-native";
+import {View, TouchableOpacity} from "react-native";
 //libs
 import { useTranslation } from 'react-i18next';
 import { Icon } from  "@rneui/themed";
@@ -7,7 +7,7 @@ import {Modal, PaperProvider, Portal } from "react-native-paper";
 import i18next from "i18next";
 //local
 import { Container, Body, ModalTitle, ModalText } from "./styles";
-import Header from "../../components/Header/Header";
+import Header from "../../components/Header";
 import Meassages from "../../../assets/messages";
 import Colors from "../../../assets/colors";
 
