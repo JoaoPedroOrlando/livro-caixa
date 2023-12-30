@@ -4,6 +4,7 @@ import {View, Text, TouchableOpacity} from "react-native";
 import { useTranslation } from 'react-i18next';
 import { Icon } from  "@rneui/themed";
 import {Modal, PaperProvider, Portal } from "react-native-paper";
+import i18next from "i18next";
 //local
 import { Container, Body, ModalTitle, ModalText } from "./styles";
 import Header from "../../components/Header/Header";
@@ -17,18 +18,23 @@ function HomeScreen(): JSX.Element {
     const showModal = () => setModalVisible(true);
     const hideModal = () => setModalVisible(false);
 
+    function changeLanguage(lng:string):void{
+        i18next.changeLanguage(lng);
+        setModalVisible(false);
+    }
+
     return(
         <PaperProvider>
             <Portal>
-                <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={containerStyle}>
+                <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={modalContainerStyle}>
                     <ModalTitle>{t('language')} :</ModalTitle>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={()=>changeLanguage('en')}>
                         <ModalText>{t('english')}</ModalText>
                     </TouchableOpacity>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={()=>changeLanguage('ptBr')}>
                         <ModalText>{t('portuguese')}</ModalText>
                     </TouchableOpacity>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={()=>changeLanguage('es')}>
                         <ModalText>{t('spanish')}</ModalText>
                     </TouchableOpacity>
                 </Modal>
@@ -46,7 +52,6 @@ function HomeScreen(): JSX.Element {
                 />
                 <Body>
                     <View>
-                        {/* <Text>{t('welcome')}</Text> */}
                     </View>
                 </Body>
             </Container>
@@ -54,7 +59,7 @@ function HomeScreen(): JSX.Element {
     )
 }
 
-const containerStyle = {
+const modalContainerStyle = {
     backgroundColor: Colors.primary.white, 
     padding: 20,
     marginLeft:20,
