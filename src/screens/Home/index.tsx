@@ -6,10 +6,11 @@ import { Icon } from  "@rneui/themed";
 import {Modal, PaperProvider, Portal } from "react-native-paper";
 import i18next from "i18next";
 //local
-import { Container, Body, ModalTitle, ModalText } from "./styles";
+import { Container, Body, ModalTitle, ModalText, Spacer, Row } from "./styles";
 import Header from "../../components/Header";
 import Meassages from "../../../assets/messages";
 import Colors from "../../../assets/colors";
+import HomeCard from "../../components/HomeCard";
 
 function HomeScreen(): JSX.Element {
     const { t } = useTranslation();
@@ -51,8 +52,13 @@ function HomeScreen(): JSX.Element {
                     onRightIconPressed={showModal}
                 />
                 <Body>
-                    <View>
-                    </View>
+                    <Spacer/>
+                    <Row>
+                        <HomeCard
+                            icon="plus"
+                            title={t('new')}            
+                        />
+                    </Row>
                 </Body>
             </Container>
         </PaperProvider>

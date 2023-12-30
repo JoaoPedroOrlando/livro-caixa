@@ -1,7 +1,7 @@
 import React from "react";
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import HomeScreen from "../screens/Home/HomeScreen";
+import HomeScreen from "../screens/Home/index";
 const Stack = createNativeStackNavigator();
 
 function Routes(): JSX.Element {
