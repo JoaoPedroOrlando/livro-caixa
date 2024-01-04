@@ -14,7 +14,7 @@ const Header: React.FC<HeaderProps> = ({ title, leftIcon, rightIcon, onLeftIconP
     return (
       <Container>
         <TouchableOpacity
-          onPress={()=>onLeftIconPressed}
+          onPress={onLeftIconPressed}
         >
             <IconContainer>{leftIcon}</IconContainer>
         </TouchableOpacity>

@@ -13,6 +13,7 @@ export const Title = styled.Text`
   color: ${Colors.primary.white};
   font-size: 18px;
   font-weight: bold;
+  text-transform: capitalize;
 `;
 
 export const IconContainer = styled.View``;
