@@ -6,6 +6,8 @@
     "portuguese": "Português",
     "spanish": "Espanhol",
     "new":"Novo",
-    "entry":"lançamento"
+    "entry":"entrada",
+    "entry-value":"Valor do lançamento",
+    "withdrawal":"saída"
 }
   
