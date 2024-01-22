@@ -1,13 +1,23 @@
-import React, { useCallback, useMemo, useRef, useState } from "react";
+import React, { useState } from "react";
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { View,Text, StyleSheet } from "react-native";
+import {  StyleSheet, Platform, Keyboard, TouchableWithoutFeedback } from "react-native";
 import { Icon } from  "@rneui/themed";
 import { useNavigation } from "@react-navigation/native";
 import { useTranslation } from "react-i18next";
-import BottomSheet, { BottomSheetTextInput } from '@gorhom/bottom-sheet';
-import { Button, RadioButton } from "react-native-paper";
+import { RadioButton } from "react-native-paper";
 //local
-import { Container, Body, Spacer, Row, SheetContainer, Footer} from "./styles";
+import { 
+    Container, 
+    Body,
+    Spacer,
+    Row, 
+    InputsContainer,
+    RadioText,
+    RadioGroupContainer,
+    RadioContainer,
+    Input,
+    TextStyled,
+    AddBtn} from "./styles";
 import Header from "../../components/Header";
 import Colors from "../../../assets/colors";
 import { TouchableOpacity } from "react-native-gesture-handler";
@@ -25,21 +35,24 @@ function EntryScreen():JSX.Element{
     const { t } = useTranslation();
 //------------------------------------------------------------
 //bottom-sheet------------------------------------------------
-    const bottomSheetRef = useRef<BottomSheet>(null);
-    const snapPoints = useMemo(() => ['20%'], []);
-    const handleSheetChanges = useCallback((index: number) => {
-        // console.log('handleSheetChanges', index);
-    }, []);
-    const handleClosingSheet = ()=>{
-        bottomSheetRef.current?.close();
-    }
-    const handleOpeningSheet = ()=>{
-        bottomSheetRef.current?.expand();
-    }
+    // const bottomSheetRef = useRef<BottomSheet>(null);
+    // const snapPoints = useMemo(() => ['25%'], []);
+    // const [sheetIndex,setSheetIndex] = useState(0);
+    // const handleSheetChanges = useCallback((index: number) => {
+    //     // console.log('handleSheetChanges', index);
+    // }, []);
+    // const handleClosingSheet = ()=>{
+    //     bottomSheetRef.current?.close();
+    // }
+    // const handleOpeningSheet = ()=>{
+    //     bottomSheetRef.current?.expand();
+    // }
 //------------------------------------------------------------
 //inputs------------------------------------------------------
     const [number, setNumber] = useState('');
     const [type,setType] = useState(EntryType.ENTRY);
+    const [description, setDescription] = useState('');
+
     const onChangeNumber = (inputValue)=>{
         const numericValue = inputValue.replace(/[^0-9]/g, '');
         const formattedValue = new Intl.NumberFormat('pt-BR', {
@@ -50,8 +63,11 @@ function EntryScreen():JSX.Element{
         setNumber(formattedValue);
     }
     const onChangeType = (radioValue)=>{
-
+        setType(radioValue)
     }
+    const dismissKeyboard = () => {
+        Keyboard.dismiss();
+    };
 //------------------------------------------------------------
 //date-picker-------------------------------------------------
     const [date, setDate] = useState(new Date(new Date().getTime()));
@@ -74,6 +90,7 @@ function EntryScreen():JSX.Element{
 //------------------------------------------------------------
 
     return (
+        <TouchableWithoutFeedback onPress={dismissKeyboard}>
         <Container>
             <Header
                 title={t('entry')}
@@ -88,6 +105,53 @@ function EntryScreen():JSX.Element{
                 }}
             />
             <Body>
+                <InputsContainer>
+                    <Spacer/>
+                    <Row style={{justifyContent:'space-around',alignItems:'center'}}>
+                        <Input 
+                            style={{flex:0.5,marginRight:10}}
+                            value={number}
+                            placeholder="R$ 0,00"
+                            keyboardType="numeric" 
+                            onChangeText={onChangeNumber}
+                            enablesReturnKeyAutomatically={true}
+                        />
+                        <Input 
+                            style={{flex:0.5}}
+                            value={description}
+                            placeholder={t('description')}
+                            onChangeText={setDescription}
+                        />
+                    </Row>
+                    
+                    <Row style={{justifyContent:'space-evenly',borderColor:'black',borderWidth:1}}>
+                        <TouchableOpacity onPress={showDatepicker} style={{borderRadius:10}}>
+                            <TextStyled>
+                                {formatDate(date)}
+                            </TextStyled>
+                        </TouchableOpacity>
+                        <RadioButton.Group onValueChange={onChangeType} value={type}>
+                            <RadioGroupContainer>
+                                <RadioContainer>
+                                    <RadioText>{t('entry')}</RadioText>
+                                    <RadioButton value={EntryType.ENTRY} color={Colors.primary.gray}/>
+                                </RadioContainer>
+                                <RadioContainer>
+                                    <RadioText>{t('withdrawal')}</RadioText>
+                                    <RadioButton value={EntryType.WITHDRAWAL} color={Colors.primary.gray}/>
+                                </RadioContainer>
+                            </RadioGroupContainer>
+                        </RadioButton.Group>
+                        <AddBtn >
+                            <Icon  
+                                name="add"
+                                type='ionicon'
+                                color={Colors.primary.green}
+                                size={30}
+                            />
+                        </AddBtn>
+                     </Row>
+                </InputsContainer>
                 <Spacer/>
                 {show && (
                     <DateTimePicker
@@ -98,46 +162,8 @@ function EntryScreen():JSX.Element{
                     />
                 )}
             </Body>
-            <BottomSheet
-                ref={bottomSheetRef}
-                index={0}
-                snapPoints={snapPoints}
-                onChange={handleSheetChanges}
-                enablePanDownToClose={false}
-            >
-                <SheetContainer>
-                    <Row>
-                        <BottomSheetTextInput 
-                            value={number}
-                            placeholder="R$ 0,00"
-                            keyboardType="numeric" 
-                            style={styles.input} 
-                            onChangeText={onChangeNumber}
-                        />
-                        <TouchableOpacity onPress={showDatepicker}>
-                            <BottomSheetTextInput 
-                                value={formatDate(date)}
-                                placeholder=""
-                                editable={false}
-                                style={styles.input} 
-                            />
-                        </TouchableOpacity>
-                    </Row>
-                    <Row>
-                        <RadioButton.Group onValueChange={onChangeType} value={type}>
-                            <View>
-                                <Text>{t('entry')}</Text>
-                                <RadioButton value={EntryType.ENTRY} />
-                            </View>
-                            <View>
-                                <Text>{t('withdrawal')}</Text>
-                                <RadioButton value={EntryType.WITHDRAWAL} />
-                            </View>
-                        </RadioButton.Group>
-                    </Row>
-                </SheetContainer>
-            </BottomSheet>
         </Container>
+        </TouchableWithoutFeedback>
     )
 }
 
@@ -149,7 +175,7 @@ const styles = StyleSheet.create({
       fontSize: 16,
       lineHeight: 20,
       padding: 8,
-      backgroundColor: 'rgba(151, 151, 151, 0.25)',
+      backgroundColor: Colors.primary.lightGray,
       minWidth:150,
       marginHorizontal:10
     },

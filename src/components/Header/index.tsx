@@ -1,6 +1,6 @@
 import React from "react";
 import {TouchableOpacity} from "react-native"
-import {Container, Title, IconContainer} from './styles';
+import {Container, Title, IconContainer, Spacer} from './styles';
 
 interface HeaderProps {
     title: string;

@@ -1,19 +1,19 @@
 import styled from 'styled-components/native';
 import Colors from '../../../assets/colors';
 
-export const Container = styled.SafeAreaView`
+export const Container = styled.View`
     flex:1;
     justify-content: flex-end;
     background-color: ${Colors.primary.blue};
 `;
 
-export const Footer = styled.View`
-    flex:1;
+export const InputsContainer = styled.View`
+    /* flex:0.3; */
     background-color: beige;
 `;
 
 export const Body = styled.View`
-    flex:3;
+    flex:1;
     padding: 10px;
     background-color: ${Colors.primary.white};
     /* border-top-left-radius: 32px;
@@ -21,7 +21,7 @@ export const Body = styled.View`
 `;
 
 export const Spacer = styled.View`
-    margin:25px;
+    margin:10px;
 `;
 
 export const Row = styled.View`
@@ -30,11 +30,51 @@ export const Row = styled.View`
     /* background-color: beige; */
 `;
 
-export const SheetContainer = styled.View`
-    flex: 1;
-    padding: 0px 20px 0px 20px;
-`;
-
 export const RadioText = styled.Text`
     text-transform: capitalize;
+`;
+
+export const RadioGroupContainer = styled.View`
+border: 1px solid black;
+    display: flex;
+    flex-direction: row;
+    /* background-color: beige; */
+    background-color: ${Colors.primary.lightGray};
+    border-radius: 10px;
+`;
+
+export const RadioContainer = styled.View`
+    margin-left: 5px;
+    margin-right: 5px;
+`;
+
+export const Input = styled.TextInput`
+    margin-top: 8px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    font-size: 16px;
+    line-height: 20px;
+    padding: 8px;
+    background-color: ${Colors.primary.lightGray};
+`;
+
+export const TextStyled = styled.Text`
+border: 1px solid black;
+    height: 50px;
+    margin-top: 8px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    font-size: 16px;
+    line-height: 20px;
+    padding: 8px;
+    background-color: ${Colors.primary.lightGray};
+`;
+
+export const AddBtn = styled.TouchableOpacity`
+    height: 50px;
+    background-color: ${Colors.disable.green};
+    align-content: center;
+    border-radius:10px;
+    padding: 10px;
+    border: 1px solid black;
 `;

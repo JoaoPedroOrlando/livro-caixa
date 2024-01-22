@@ -5,8 +5,8 @@ export const Container = styled.View`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  padding: 20px;
-  background-color: ${Colors.primary.blue};
+  padding: 40px 20px 20px 20px;
+  background-color: ${Colors.primary.lightBlue};
 `;
 
 export const Title = styled.Text`
@@ -17,3 +17,7 @@ export const Title = styled.Text`
 `;
 
 export const IconContainer = styled.View``;
+
+export const Spacer = styled.View`
+    margin:25px;
+`;

@@ -3,7 +3,7 @@ import Colors from '../../../assets/colors';
 
 export const Container = styled.View`
     flex:1;
-    background-color: ${Colors.primary.blue};
+    background-color: ${Colors.primary.lightBlue};
 `;
 
 export const Body = styled.View`
