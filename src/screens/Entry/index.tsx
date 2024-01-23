@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import DateTimePicker from '@react-native-community/datetimepicker';
-import {  StyleSheet, Platform, Keyboard, TouchableWithoutFeedback } from "react-native";
+import {  StyleSheet, Keyboard, TouchableWithoutFeedback, View } from "react-native";
 import { Icon } from  "@rneui/themed";
 import { useNavigation } from "@react-navigation/native";
 import { useTranslation } from "react-i18next";
@@ -124,12 +124,15 @@ function EntryScreen():JSX.Element{
                         />
                     </Row>
                     
-                    <Row style={{justifyContent:'space-evenly',borderColor:'black',borderWidth:1}}>
+                    <Row style={{justifyContent:'space-evenly',alignItems:'center',borderColor:'black',borderWidth:1}}>
+                        <View>
+
                         <TouchableOpacity onPress={showDatepicker} style={{borderRadius:10}}>
                             <TextStyled>
                                 {formatDate(date)}
                             </TextStyled>
                         </TouchableOpacity>
+                        </View>
                         <RadioButton.Group onValueChange={onChangeType} value={type}>
                             <RadioGroupContainer>
                                 <RadioContainer>

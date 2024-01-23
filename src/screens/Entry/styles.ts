@@ -60,18 +60,19 @@ export const Input = styled.TextInput`
 
 export const TextStyled = styled.Text`
 border: 1px solid black;
-    height: 50px;
+    height: 55px;
     margin-top: 8px;
     margin-bottom: 10px;
     border-radius: 10px;
     font-size: 16px;
     line-height: 20px;
     padding: 8px;
+    text-align: center;
     background-color: ${Colors.primary.lightGray};
 `;
 
 export const AddBtn = styled.TouchableOpacity`
-    height: 50px;
+    height: 55px;
     background-color: ${Colors.disable.green};
     align-content: center;
     border-radius:10px;

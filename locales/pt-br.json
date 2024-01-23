@@ -9,6 +9,7 @@
     "entry":"entrada",
     "entry-value":"Valor do lançamento",
     "withdrawal":"saída",
-    "description":"descrição"
+    "description":"descrição",
+    "new-cash-book":"Novo Livro Caixa"
 }
   

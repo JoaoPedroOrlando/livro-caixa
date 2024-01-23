@@ -59,7 +59,7 @@ function HomeScreen(): JSX.Element {
                             icon="plus"
                             title={t('new')} 
                             action={() => {
-                                navigation.navigate('Entry');
+                                navigation.navigate('CashBook');
                               }}                           
                         />
                     </Row>
