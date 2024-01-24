@@ -1,9 +1,12 @@
-import { Entry } from "./Entry";
+import { CashBookModel } from "./CashBook";
+import { EntryModel } from "./Entry";
 
 export const models =[
-    Entry
+    EntryModel,
+    CashBookModel
 ]
 
 export {
-    Entry
+    EntryModel,
+    CashBookModel
 }
