@@ -4,6 +4,12 @@
     "language":"Idioma",
     "english": "Inglês",
     "portuguese": "Português",
-    "spanish": "Espanhol"
+    "spanish": "Espanhol",
+    "new":"Novo",
+    "entry":"entrada",
+    "entry-value":"Valor do lançamento",
+    "withdrawal":"saída",
+    "description":"descrição",
+    "new-cash-book":"Novo Livro Caixa"
 }
   

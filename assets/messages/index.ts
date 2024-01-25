@@ -1,5 +1,5 @@
 const Messages = {
-    appName:"FlashCards"
+    appName:"Livro Caixa"
 }
 
 export default Messages;

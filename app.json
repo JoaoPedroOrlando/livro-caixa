@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Flashcards",
-    "slug": "Flashcards",
+    "name": "Livro Caixa",
+    "slug": "LivroCaixa",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icons/icon.png",
@@ -15,33 +15,18 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.jpborlando.LivroCaixa"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/icons/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.jpborlando.LivroCaixa"
     },
     "web": {
       "favicon": "./assets/icons/favicon.png"
-    },
-    "plugins": [
-      [
-        "@morrowdigital/watermelondb-expo-plugin",
-        {
-          "databases": ["morrow.db"]
-        }
-      ],
-      [
-        "expo-build-properties",
-        {
-          "android": {
-            "kotlinVersion": "1.6.10",
-            "extraProguardRules":  "-keep class com.nozbe.watermelondb.** { *; }"
-          }
-        }
-      ]
-    ]
+    }
   }
 }

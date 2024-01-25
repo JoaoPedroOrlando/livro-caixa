@@ -1,34 +1,42 @@
 import React from "react";
-import {View, Text, TouchableOpacity} from "react-native";
-//libs
+import {TouchableOpacity} from "react-native";
 import { useTranslation } from 'react-i18next';
 import { Icon } from  "@rneui/themed";
 import {Modal, PaperProvider, Portal } from "react-native-paper";
+import i18next from "i18next";
+import { useNavigation } from "@react-navigation/native";
 //local
-import { Container, Body, ModalTitle, ModalText } from "./styles";
-import Header from "../../components/Header/Header";
+import { Container, Body, ModalTitle, ModalText, Spacer, Row } from "./styles";
+import Header from "../../components/Header";
 import Meassages from "../../../assets/messages";
 import Colors from "../../../assets/colors";
+import HomeCard from "../../components/HomeCard";
 
 function HomeScreen(): JSX.Element {
+    const navigation = useNavigation();
     const { t } = useTranslation();
     const [visible, setModalVisible] = React.useState(false);
 
     const showModal = () => setModalVisible(true);
     const hideModal = () => setModalVisible(false);
 
+    function changeLanguage(lng:string):void{
+        i18next.changeLanguage(lng);
+        setModalVisible(false);
+    }
+
     return(
         <PaperProvider>
             <Portal>
-                <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={containerStyle}>
+                <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={modalContainerStyle}>
                     <ModalTitle>{t('language')} :</ModalTitle>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={()=>changeLanguage('en')}>
                         <ModalText>{t('english')}</ModalText>
                     </TouchableOpacity>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={()=>changeLanguage('ptBr')}>
                         <ModalText>{t('portuguese')}</ModalText>
                     </TouchableOpacity>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={()=>changeLanguage('es')}>
                         <ModalText>{t('spanish')}</ModalText>
                     </TouchableOpacity>
                 </Modal>
@@ -45,16 +53,23 @@ function HomeScreen(): JSX.Element {
                     onRightIconPressed={showModal}
                 />
                 <Body>
-                    <View>
-                        {/* <Text>{t('welcome')}</Text> */}
-                    </View>
+                    <Spacer/>
+                    <Row>
+                        <HomeCard
+                            icon="plus"
+                            title={t('new')} 
+                            action={() => {
+                                navigation.navigate('CashBook');
+                              }}                           
+                        />
+                    </Row>
                 </Body>
             </Container>
         </PaperProvider>
     )
 }
 
-const containerStyle = {
+const modalContainerStyle = {
     backgroundColor: Colors.primary.white, 
     padding: 20,
     marginLeft:20,

@@ -4,6 +4,12 @@
     "language":"Language",
     "english": "English",
     "portuguese": "Portuguese",
-    "spanish": "Spanish"
+    "spanish": "Spanish",
+    "new":"New",
+    "entry":"entry",
+    "entry-value":"Entry value",
+    "withdrawal":"withdrawal",
+    "description":"description",
+    "new-cash-book":"New Cash Book"
 }
   
