@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { TouchableWithoutFeedback, Keyboard, FlatList, Text, StyleSheet } from 'react-native';
 import {  SafeAreaView } from 'react-native-safe-area-context';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Icon } from  "@rneui/themed";
 import { useNavigation } from "@react-navigation/native";
+//db
+import CashBookService from '../../database/services/CashBookService';
 //local
 import Header from '../../components/Header';
 import { 
@@ -21,12 +23,7 @@ function CashBookScreen(): JSX.Element{
 //------------------------------------------------------------
 const [description,setDescription] = useState('');
 const [data, setData] = useState([]);
-const addItemToList = () => {
-    if (description.trim() !== '') {
-        setData([...data, { key: getRandomHexCode(), value: description }]);
-        setDescription('');
-    }
-}
+
 const dismissKeyboard = () => {
     Keyboard.dismiss();
 };
@@ -40,7 +37,7 @@ function getRandomHexCode() {
   
     // Ensure the hexadecimal code is always 6 digits long by padding with zeros if needed
     return randomHex.padStart(6, '0');
-  }
+}
   
 //navigation--------------------------------------------------
     const navigation = useNavigation();
@@ -48,8 +45,49 @@ function getRandomHexCode() {
 //translate---------------------------------------------------
     const { t } = useTranslation();
 //------------------------------------------------------------
-//CRUD--------------------------------------------------------
+//database----------------------------------------------------
+// Define an async function inside useCallback
 
+const saveCashBook  = async () => {
+    try {
+        console.log("description ===>",description);
+        if(description.length > 0 ){
+            console.log("entrou");
+            CashBookService.create({description})
+            .then(cashbook => {
+                console.log("salvou!",cashbook);
+                fetchData();
+            })
+            .catch( err => console.log(err) )
+        }
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
+  const fetchData = async () => {
+    try {
+
+        // CashBookService.removeAll()
+        // .then(cashbooks => {
+        //     console.log(cashbooks);
+        // })
+        // .catch( err => console.log(err) )
+
+        CashBookService.all()
+        .then(cashbooks => {
+            console.log("buscou do banco:",cashbooks);
+            setData(cashbooks);
+        })
+        .catch( err => console.log(err) )
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
+useEffect(() => {
+   fetchData();
+  }, []);
 //------------------------------------------------------------
     return (
         <TouchableWithoutFeedback onPress={dismissKeyboard}>
@@ -75,7 +113,7 @@ function getRandomHexCode() {
                             onChangeText={setDescription}
                         />
                         <AddBtn 
-                            onPress={addItemToList}
+                            onPress={saveCashBook}
                         >
                             <Icon  
                                 name="add"
@@ -88,8 +126,8 @@ function getRandomHexCode() {
                     <SafeAreaView>
                         <FlatList
                             data={data}
-                            renderItem={({item}) => <Text>{item.value}</Text>}
-                            keyExtractor={item => item}
+                            renderItem={({item}) => <Text>{item.description}</Text>}
+                            keyExtractor={item => item.id}
                         />
                     </SafeAreaView>
                 </Body>
