@@ -1,5 +1,6 @@
 import React from 'react';
 import { TouchableWithoutFeedback, Keyboard, FlatList, Text, StyleSheet } from 'react-native';
+import {  SafeAreaView } from 'react-native-safe-area-context';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Icon } from  "@rneui/themed";
@@ -22,14 +23,25 @@ const [description,setDescription] = useState('');
 const [data, setData] = useState([]);
 const addItemToList = () => {
     if (description.trim() !== '') {
-        setData([...data, { key: String(data.length), value: description }]);
+        setData([...data, { key: getRandomHexCode(), value: description }]);
         setDescription('');
     }
 }
 const dismissKeyboard = () => {
     Keyboard.dismiss();
-};    
+};
 
+function getRandomHexCode() {
+    // Generate a random number between 0 and 16777215 (0xFFFFFF in hexadecimal)
+    const randomDecimal = Math.floor(Math.random() * 16777216);
+  
+    // Convert the decimal number to hexadecimal and remove the '0x' prefix
+    const randomHex = randomDecimal.toString(16).toUpperCase();
+  
+    // Ensure the hexadecimal code is always 6 digits long by padding with zeros if needed
+    return randomHex.padStart(6, '0');
+  }
+  
 //navigation--------------------------------------------------
     const navigation = useNavigation();
 //------------------------------------------------------------
@@ -73,11 +85,13 @@ const dismissKeyboard = () => {
                             />
                         </AddBtn>
                     </Row>
-                    {/* <FlatList
-                        data={data}
-                        renderItem={({ item }) => <Text style={styles.listItem}>{item.value}</Text>}
-                        keyExtractor={(item) => item.key}
-                    /> */}
+                    <SafeAreaView>
+                        <FlatList
+                            data={data}
+                            renderItem={({item}) => <Text>{item.value}</Text>}
+                            keyExtractor={item => item}
+                        />
+                    </SafeAreaView>
                 </Body>
             </Container>
         </TouchableWithoutFeedback>
