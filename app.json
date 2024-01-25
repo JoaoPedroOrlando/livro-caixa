@@ -27,25 +27,6 @@
     },
     "web": {
       "favicon": "./assets/icons/favicon.png"
-    },
-    "plugins": [
-      [
-        "@morrowdigital/watermelondb-expo-plugin",
-        {
-          "databases": [
-            "morrow.db"
-          ]
-        }
-      ],
-      [
-        "expo-build-properties",
-        {
-          "android": {
-            "kotlinVersion": "1.6.10",
-            "extraProguardRules": "-keep class com.nozbe.watermelondb.** { *; }"
-          }
-        }
-      ]
-    ]
+    }
   }
 }

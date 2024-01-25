@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Icon } from  "@rneui/themed";
 import { useNavigation } from "@react-navigation/native";
-import { database } from '../../database/index';
 //local
 import Header from '../../components/Header';
 import { 
@@ -15,7 +14,6 @@ import {
     AddBtn
  } from './styles';
  import Colors from "../../../assets/colors";
-import { CashBookModel } from '../../database/models/CashBook';
 
 function CashBookScreen(): JSX.Element{
 //inputs------------------------------------------------------  
@@ -39,15 +37,6 @@ const dismissKeyboard = () => {
     const { t } = useTranslation();
 //------------------------------------------------------------
 //CRUD--------------------------------------------------------
-
-    async function saveCashBook():Promise<void>{
-        try{
-            const response = await database.get<CashBookModel>('cashbook').create(cashbook => cashbook.description = description);
-            console.log('Salvou!',response);
-        }catch(error){
-            console.log('Error',error);
-        }
-    }
 
 //------------------------------------------------------------
     return (
@@ -84,11 +73,11 @@ const dismissKeyboard = () => {
                             />
                         </AddBtn>
                     </Row>
-                    <FlatList
+                    {/* <FlatList
                         data={data}
                         renderItem={({ item }) => <Text style={styles.listItem}>{item.value}</Text>}
                         keyExtractor={(item) => item.key}
-                    />
+                    /> */}
                 </Body>
             </Container>
         </TouchableWithoutFeedback>
