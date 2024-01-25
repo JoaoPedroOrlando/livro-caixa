@@ -1,6 +1,6 @@
 import React from "react";
 import {TouchableOpacity} from "react-native"
-import {Container, Title, IconContainer} from './styles';
+import {Container, Title, IconContainer, Spacer} from './styles';
 
 interface HeaderProps {
     title: string;
@@ -14,7 +14,7 @@ const Header: React.FC<HeaderProps> = ({ title, leftIcon, rightIcon, onLeftIconP
     return (
       <Container>
         <TouchableOpacity
-          onPress={()=>onLeftIconPressed}
+          onPress={onLeftIconPressed}
         >
             <IconContainer>{leftIcon}</IconContainer>
         </TouchableOpacity>

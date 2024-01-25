@@ -1,10 +1,10 @@
 import React from "react";
-import {View, TouchableOpacity} from "react-native";
-//libs
+import {TouchableOpacity} from "react-native";
 import { useTranslation } from 'react-i18next';
 import { Icon } from  "@rneui/themed";
 import {Modal, PaperProvider, Portal } from "react-native-paper";
 import i18next from "i18next";
+import { useNavigation } from "@react-navigation/native";
 //local
 import { Container, Body, ModalTitle, ModalText, Spacer, Row } from "./styles";
 import Header from "../../components/Header";
@@ -13,6 +13,7 @@ import Colors from "../../../assets/colors";
 import HomeCard from "../../components/HomeCard";
 
 function HomeScreen(): JSX.Element {
+    const navigation = useNavigation();
     const { t } = useTranslation();
     const [visible, setModalVisible] = React.useState(false);
 
@@ -56,7 +57,10 @@ function HomeScreen(): JSX.Element {
                     <Row>
                         <HomeCard
                             icon="plus"
-                            title={t('new')}            
+                            title={t('new')} 
+                            action={() => {
+                                navigation.navigate('CashBook');
+                              }}                           
                         />
                     </Row>
                 </Body>
