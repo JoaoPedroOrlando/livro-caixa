@@ -12,7 +12,7 @@ const Colors = {
     },
     disable: {
       blue: '#428bca',
-      red: '#d9534f',
+      red: '#ea9999',
       white:'#f9f9f9',
       lightBlue:'#5bc0de',
       green:'#d9ead3'

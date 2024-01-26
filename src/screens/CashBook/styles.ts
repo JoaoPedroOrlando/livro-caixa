@@ -37,3 +37,32 @@ export const AddBtn = styled.TouchableOpacity`
     padding: 10px;
     flex:0.2;
 `;
+
+export const SheetContainer = styled.View`
+    flex: 1;
+    padding: 0px 20px 0px 20px;
+`;
+
+export const WarnningText = styled.Text`
+    font-size: 20px;
+    font-weight: 500;
+    color: ${Colors.primary.darkGray};
+    text-align: center;
+    margin-top: 20px;
+`;
+
+export const DeleteBtn = styled.TouchableOpacity`
+    background-color: ${Colors.disable.red};
+    height: 50px;
+    flex:0.5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+`;
+
+export const DeleteBtnText = styled.Text`
+    color: ${Colors.primary.white};
+    font-size: 20px;
+    font-weight: 500;
+`;

@@ -10,6 +10,8 @@
     "entry-value":"Entry value",
     "withdrawal":"withdrawal",
     "description":"description",
-    "new-cash-book":"New Cash Book"
+    "new-cash-book":"New Cash Book",
+    "want-to-delete":"Do you want to delete the register?",
+    "delete":"Delete"
 }
   

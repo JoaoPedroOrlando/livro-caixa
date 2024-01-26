@@ -1,10 +1,11 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef } from 'react';
 import { TouchableWithoutFeedback, Keyboard, FlatList, Text, StyleSheet } from 'react-native';
 import {  SafeAreaView } from 'react-native-safe-area-context';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Icon } from  "@rneui/themed";
 import { useNavigation } from "@react-navigation/native";
+import BottomSheet, { BottomSheetTextInput } from '@gorhom/bottom-sheet'
 //db
 import CashBookService from '../../database/services/CashBookService';
 //local
@@ -14,81 +15,119 @@ import {
     Container,
     Row,
     Body,
-    AddBtn
+    AddBtn,
+    SheetContainer,
+    WarnningText,
+    DeleteBtn,
+    DeleteBtnText
  } from './styles';
- import Colors from "../../../assets/colors";
+import Colors from "../../../assets/colors";
+import SimpleListItem from '../../components/SimpleListItem';
+import { Spacer } from '../Home/styles';
 
 function CashBookScreen(): JSX.Element{
 //inputs------------------------------------------------------  
 //------------------------------------------------------------
-const [description,setDescription] = useState('');
-const [data, setData] = useState([]);
+    const [description,setDescription] = useState('');
+    const [data, setData] = useState([]);
 
-const dismissKeyboard = () => {
-    Keyboard.dismiss();
-};
+    const dismissKeyboard = () => {
+        Keyboard.dismiss();
+    };
 
-function getRandomHexCode() {
-    // Generate a random number between 0 and 16777215 (0xFFFFFF in hexadecimal)
-    const randomDecimal = Math.floor(Math.random() * 16777216);
-  
-    // Convert the decimal number to hexadecimal and remove the '0x' prefix
-    const randomHex = randomDecimal.toString(16).toUpperCase();
-  
-    // Ensure the hexadecimal code is always 6 digits long by padding with zeros if needed
-    return randomHex.padStart(6, '0');
-}
-  
 //navigation--------------------------------------------------
     const navigation = useNavigation();
+
 //------------------------------------------------------------
 //translate---------------------------------------------------
     const { t } = useTranslation();
+
 //------------------------------------------------------------
 //database----------------------------------------------------
-// Define an async function inside useCallback
 
-const saveCashBook  = async () => {
-    try {
-        console.log("description ===>",description);
-        if(description.length > 0 ){
-            console.log("entrou");
-            CashBookService.create({description})
-            .then(cashbook => {
-                console.log("salvou!",cashbook);
-                fetchData();
+    const saveCashBook  = async () => {
+        try {
+            console.log("description ===>",description);
+            if(description.length > 0 ){
+                console.log("entrou");
+                CashBookService.create({description})
+                .then(cashbook => {
+                    console.log("salvou!",cashbook);
+                    fetchData();
+                })
+                .catch( err => console.log(err) )
+            }
+        } catch (error) {
+        console.error('Error fetching data:', error);
+        } finally{
+            setDescription("");
+        }
+    };
+
+    const fetchData = async () => {
+        try {
+            CashBookService.all()
+            .then(cashbooks => {
+                console.log("buscou do banco:",cashbooks);
+                setData(cashbooks);
             })
             .catch( err => console.log(err) )
+        } catch (error) {
+            console.error('Error fetching data:', error);
         }
-    } catch (error) {
-      console.error('Error fetching data:', error);
+    };
+
+    const deleteCashBook = async (id:string) => {
+        try{
+            CashBookService
+            .remove(id)
+            .then((res)=>{
+                console.log(res);})
+            .catch( err => console.log(err) )
+        }catch(error){}
     }
-  };
 
-  const fetchData = async () => {
-    try {
+    useEffect(() => {
+        fetchData();
+    }, []);
 
-        // CashBookService.removeAll()
-        // .then(cashbooks => {
-        //     console.log(cashbooks);
-        // })
-        // .catch( err => console.log(err) )
-
-        CashBookService.all()
-        .then(cashbooks => {
-            console.log("buscou do banco:",cashbooks);
-            setData(cashbooks);
-        })
-        .catch( err => console.log(err) )
-    } catch (error) {
-      console.error('Error fetching data:', error);
-    }
-  };
-
-useEffect(() => {
-   fetchData();
-  }, []);
 //------------------------------------------------------------
+//FlatList----------------------------------------------------
+    const [registerToDel, setRegisterToDel] = useState('');
+
+    const openDeleteWarnning = (key:string)=>{
+        setRegisterToDel(key);
+        handleOpeningSheet();
+    }
+
+    const handleDelete = ()=>{
+        try{
+            deleteCashBook(registerToDel)
+        }catch(error){
+
+        } finally{
+            fetchData();
+            setTimeout(()=>{},1000);
+            handleClosingSheet();
+        }
+    }
+//------------------------------------------------------------
+//bottom-sheet------------------------------------------------
+    const bottomSheetRef = useRef<BottomSheet>(null);
+    const snapPoints = useMemo(() => ['35%'], []);
+    const [sheetIndex,setSheetIndex] = useState(0);
+    const handleSheetChanges = useCallback((index: number) => {
+        // console.log('handleSheetChanges', index);
+    }, []);
+    const handleClosingSheet = ()=>{
+        bottomSheetRef.current?.close();
+    }
+    const handleOpeningSheet = ()=>{
+        bottomSheetRef.current?.expand();
+    }
+//------------------------------------------------------------
+//------------------------------------------------------------
+
     return (
         <TouchableWithoutFeedback onPress={dismissKeyboard}>
             <Container>
@@ -126,11 +165,40 @@ useEffect(() => {
                     <SafeAreaView>
                         <FlatList
                             data={data}
-                            renderItem={({item}) => <Text>{item.description}</Text>}
+                            renderItem={({item}) => {
+                                return <SimpleListItem
+                                    item={{key:item.id,value:item.description}}
+                                    enableDelete={true}
+                                    onDeleteAction={openDeleteWarnning}
+                                />
+                            }}
                             keyExtractor={item => item.id}
                         />
                     </SafeAreaView>
                 </Body>
+                <BottomSheet
+                    ref={bottomSheetRef}
+                    index={-1}
+                    snapPoints={snapPoints}
+                    onChange={handleSheetChanges}
+                    enablePanDownToClose={true}
+                >
+                    <SheetContainer>
+                        <WarnningText>
+                            {t('want-to-delete')}
+                        </WarnningText>
+                        <Spacer/>
+                        <Row style={{justifyContent:'center'}}>
+                            <DeleteBtn
+                                onPress={handleDelete}
+                            >
+                                <DeleteBtnText>
+                                    {t('delete')}
+                                </DeleteBtnText>
+                            </DeleteBtn>
+                        </Row>
+                    </SheetContainer>
+                </BottomSheet>
             </Container>
         </TouchableWithoutFeedback>
     );

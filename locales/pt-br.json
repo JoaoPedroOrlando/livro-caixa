@@ -10,6 +10,8 @@
     "entry-value":"Valor do lançamento",
     "withdrawal":"saída",
     "description":"descrição",
-    "new-cash-book":"Novo Livro Caixa"
+    "new-cash-book":"Novo Livro Caixa",
+    "want-to-delete":"Deseja realmente deletar o registro?",
+    "delete":"Deletar"
 }
   
