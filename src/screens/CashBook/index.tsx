@@ -238,12 +238,4 @@ function CashBookScreen(): JSX.Element{
     );
 };
 
-
-const styles = StyleSheet.create({
-    listItem: {
-      fontSize: 18,
-      marginVertical: 5,
-    },
-  });
-
 export default CashBookScreen;
