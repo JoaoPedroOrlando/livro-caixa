@@ -13,7 +13,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 
 interface IListItemProps {
     item:IListItem;
-    onIconAction?: () => void;
+    onIconAction?: (key:string) => void;
     onDeleteAction?: (key:string) => void;
     disabled?: boolean;
     icon?: string;
@@ -31,6 +31,10 @@ function SimpleListItem({item,onIconAction,onDeleteAction,disabled=false,icon, e
         onDeleteAction(item.key);
     }
 
+    const handleIconPressed = ()=>{
+        onIconAction(item.key);
+    }
+
     return(
         <ItemContainer>
             <TextContainer>
@@ -41,9 +45,10 @@ function SimpleListItem({item,onIconAction,onDeleteAction,disabled=false,icon, e
             <IconContainer>
                 { icon ? (
                     <TouchableOpacity
-                        onPress={onIconAction}
+                        onPress={handleIconPressed}
+                        style={{marginRight:10}}
                     >
-                        <Icon name= {icon} size={42} color={Colors.primary.darkGray} style={{ opacity: 0.35 }} /> 
+                        <Icon name= {icon} size={30} color={Colors.primary.darkGray} style={{ opacity: 0.35 }} /> 
                     </TouchableOpacity>
                     ): null 
                 }
@@ -51,7 +56,7 @@ function SimpleListItem({item,onIconAction,onDeleteAction,disabled=false,icon, e
                     <TouchableOpacity
                         onPress={handleDelete}
                     >
-                        <Icon name= {'delete'} size={42} color={Colors.primary.red} style={{ opacity: 0.35 }} /> 
+                        <Icon name= {'delete'} size={30} color={Colors.primary.red} style={{ opacity: 0.35 }} /> 
                     </TouchableOpacity>
                     ): null
                 }

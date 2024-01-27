@@ -1,11 +1,11 @@
 import React, { useCallback, useEffect, useMemo, useRef } from 'react';
-import { TouchableWithoutFeedback, Keyboard, FlatList, Text, StyleSheet } from 'react-native';
+import { TouchableWithoutFeedback, Keyboard, FlatList, StyleSheet } from 'react-native';
 import {  SafeAreaView } from 'react-native-safe-area-context';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Icon } from  "@rneui/themed";
 import { useNavigation } from "@react-navigation/native";
-import BottomSheet, { BottomSheetTextInput } from '@gorhom/bottom-sheet'
+import BottomSheet from '@gorhom/bottom-sheet'
 //db
 import CashBookService from '../../database/services/CashBookService';
 //local
@@ -26,41 +26,57 @@ import SimpleListItem from '../../components/SimpleListItem';
 import { Spacer } from '../Home/styles';
 
 function CashBookScreen(): JSX.Element{
-//inputs------------------------------------------------------  
-//------------------------------------------------------------
+//states------------------------------------------------------  
     const [description,setDescription] = useState('');
     const [data, setData] = useState([]);
+    const { t } = useTranslation();
+    const navigation = useNavigation();
+    const [registerToDel, setRegisterToDel] = useState('');
+    const [registerToEdit, setRegisterToEdit] = useState('');
+    const bottomSheetRef = useRef<BottomSheet>(null);
+    const snapPoints = useMemo(() => ['35%'], []);
+    const [sheetIndex,setSheetIndex] = useState(0);
 
+//------------------------------------------------------------
+//inputs------------------------------------------------------  
     const dismissKeyboard = () => {
         Keyboard.dismiss();
     };
-
-//navigation--------------------------------------------------
-    const navigation = useNavigation();
-
-//------------------------------------------------------------
-//translate---------------------------------------------------
-    const { t } = useTranslation();
 
 //------------------------------------------------------------
 //database----------------------------------------------------
 
     const saveCashBook  = async () => {
         try {
-            console.log("description ===>",description);
-            if(description.length > 0 ){
-                console.log("entrou");
-                CashBookService.create({description})
-                .then(cashbook => {
-                    console.log("salvou!",cashbook);
-                    fetchData();
-                })
-                .catch( err => console.log(err) )
+            console.log("registerToEdit --> ",registerToEdit.length);
+            //editar
+            if(registerToEdit){
+                const cashbook = data.find(el=> el.id == registerToEdit);
+                // console.log("editar --> ",registerToEdit);
+                // console.log("cashbook --> ",cashbook);
+                if(cashbook !== undefined){
+                    cashbook.description = description;
+                    updateCashBook(registerToEdit,cashbook)
+                    .then(cashbook => {
+                        fetchData();
+                    })
+                    .catch( err => console.log(err));
+                }
+            }else{ //adicionar
+                // console.log("salvar novo --> ",registerToEdit);
+                if(description){
+                    CashBookService.create({description})
+                    .then(cashbook => {
+                        fetchData();
+                    })
+                    .catch( err => console.log(err));
+                }
             }
         } catch (error) {
-        console.error('Error fetching data:', error);
+            console.error('Error fetching data:', error);
         } finally{
             setDescription("");
+            setRegisterToEdit("");
         }
     };
 
@@ -87,14 +103,23 @@ function CashBookScreen(): JSX.Element{
         }catch(error){}
     }
 
+    const updateCashBook = async (id:string, obj:any) =>{
+        try{
+            CashBookService
+            .update(id, obj)
+            .then((res)=>{
+                console.log("updated --> ",res);})
+            .catch( err => console.log(err) )
+        }catch(error){}
+    }
+
     useEffect(() => {
         fetchData();
     }, []);
 
 //------------------------------------------------------------
-//FlatList----------------------------------------------------
-    const [registerToDel, setRegisterToDel] = useState('');
-
+//flatList----------------------------------------------------
+   
     const openDeleteWarnning = (key:string)=>{
         setRegisterToDel(key);
         handleOpeningSheet();
@@ -111,11 +136,18 @@ function CashBookScreen(): JSX.Element{
             handleClosingSheet();
         }
     }
+
+    const handleEdit = (id:string) =>{
+        setRegisterToEdit(id);
+        const cashbook = data.find(el=>el.id == id);
+        if(cashbook == undefined)
+            return;
+        setDescription(cashbook.description);
+    }
+
 //------------------------------------------------------------
 //bottom-sheet------------------------------------------------
-    const bottomSheetRef = useRef<BottomSheet>(null);
-    const snapPoints = useMemo(() => ['35%'], []);
-    const [sheetIndex,setSheetIndex] = useState(0);
+
     const handleSheetChanges = useCallback((index: number) => {
         // console.log('handleSheetChanges', index);
     }, []);
@@ -167,9 +199,11 @@ function CashBookScreen(): JSX.Element{
                             data={data}
                             renderItem={({item}) => {
                                 return <SimpleListItem
+                                    icon='pencil'
                                     item={{key:item.id,value:item.description}}
                                     enableDelete={true}
                                     onDeleteAction={openDeleteWarnning}
+                                    onIconAction={handleEdit}
                                 />
                             }}
                             keyExtractor={item => item.id}

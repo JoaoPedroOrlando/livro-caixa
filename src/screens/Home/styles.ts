@@ -32,3 +32,8 @@ export const Row = styled.View`
     flex-direction: row;
     /* background-color: beige; */
 `;
+
+export const SheetContainer = styled.View`
+    flex: 1;
+    padding: 0px 20px 0px 20px;
+`;
