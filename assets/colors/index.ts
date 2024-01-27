@@ -3,7 +3,7 @@ const Colors = {
       blue: '#428bca',
       red: '#d9534f',
       white:'#f9f9f9',
-      lightBlue:'#5bc0de',
+      lightBlue:'#63ace5',
       green:'#5cb85c',
       lightGray:'#eeeeee',
       gray:'#999999',
@@ -17,6 +17,14 @@ const Colors = {
       lightBlue:'#5bc0de',
       green:'#d9ead3'
     },
+    palette:{
+      header:"#63ace5",
+      btnBackground:"#5cb85c",
+      btnText:"#f9f9f9",
+      textColor:"#444444",
+      bkColor:"#f9f9f9",
+      input:"#eeeeee"
+    }
   }
   
   export default Colors

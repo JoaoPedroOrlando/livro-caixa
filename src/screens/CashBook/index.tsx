@@ -24,6 +24,7 @@ import {
 import Colors from "../../../assets/colors";
 import SimpleListItem from '../../components/SimpleListItem';
 import { Spacer } from '../Home/styles';
+import {sqliteDateFormatter} from '../../../assets/utils/SQLiteDateFormatter';
 
 function CashBookScreen(): JSX.Element{
 //states------------------------------------------------------  
@@ -35,7 +36,6 @@ function CashBookScreen(): JSX.Element{
     const [registerToEdit, setRegisterToEdit] = useState('');
     const bottomSheetRef = useRef<BottomSheet>(null);
     const snapPoints = useMemo(() => ['35%'], []);
-    const [sheetIndex,setSheetIndex] = useState(0);
 
 //------------------------------------------------------------
 //inputs------------------------------------------------------  
@@ -65,7 +65,7 @@ function CashBookScreen(): JSX.Element{
             }else{ //adicionar
                 // console.log("salvar novo --> ",registerToEdit);
                 if(description){
-                    CashBookService.create({description})
+                    CashBookService.create({description,createdAt:sqliteDateFormatter(new Date)})
                     .then(cashbook => {
                         fetchData();
                     })

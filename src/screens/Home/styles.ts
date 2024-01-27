@@ -3,13 +3,13 @@ import Colors from '../../../assets/colors';
 
 export const Container = styled.View`
     flex:1;
-    background-color: ${Colors.primary.lightBlue};
+    background-color: ${Colors.palette.header};
 `;
 
 export const Body = styled.View`
     flex:1;
     padding: 10px;
-    background-color: ${Colors.primary.white};
+    background-color: ${Colors.palette.bkColor};
     border-top-left-radius: 32px;
     border-top-right-radius: 32px;
 `;

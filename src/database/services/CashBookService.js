@@ -10,7 +10,7 @@ db.transaction((tx) => {
   //<<<<<<<<<<<<<<<<<<<<<<<< USE ISSO APENAS DURANTE OS TESTES!!! >>>>>>>>>>>>>>>>>>>>>>>
 
   tx.executeSql(
-    "CREATE TABLE IF NOT EXISTS cashbooks (id INTEGER PRIMARY KEY AUTOINCREMENT, description TEXT);"
+    "CREATE TABLE IF NOT EXISTS cashbooks (id INTEGER PRIMARY KEY AUTOINCREMENT, description TEXT, createdat DATETIME);"
   );
 });
 
@@ -26,8 +26,8 @@ const create = (obj) => {
     db.transaction((tx) => {
       //comando SQL modificável
       tx.executeSql(
-        "INSERT INTO cashbooks (description) values (?);",
-        [obj.description],
+        "INSERT INTO cashbooks (description,createdat) values (?,?);",
+        [obj.description,obj.createdAt],
         //-----------------------
         (_, { rowsAffected, insertId }) => {
           if (rowsAffected > 0) resolve(insertId);

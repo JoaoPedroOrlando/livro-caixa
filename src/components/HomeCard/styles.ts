@@ -4,7 +4,7 @@ import Colors from "../../../assets/colors";
 export const CardContainer = styled.TouchableOpacity<{ disabled: boolean }>`
   height: 100px;
   flex-basis: 47.5%;
-  background-color: ${props => (props.disabled ? Colors.disable.green : Colors.primary.green)};
+  background-color: ${props => (props.disabled ? Colors.disable.green : Colors.palette.btnBackground)};
   border-radius: 10px;
   justify-content: center;
   align-items: center;
