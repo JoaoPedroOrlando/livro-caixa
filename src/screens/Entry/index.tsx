@@ -28,30 +28,17 @@ export enum EntryType{
 }
 
 function EntryScreen():JSX.Element{
-//navigation--------------------------------------------------
+//states------------------------------------------------------
     const navigation = useNavigation();
-//------------------------------------------------------------
-//translate---------------------------------------------------
     const { t } = useTranslation();
-//------------------------------------------------------------
-//bottom-sheet------------------------------------------------
-    // const bottomSheetRef = useRef<BottomSheet>(null);
-    // const snapPoints = useMemo(() => ['25%'], []);
-    // const [sheetIndex,setSheetIndex] = useState(0);
-    // const handleSheetChanges = useCallback((index: number) => {
-    //     // console.log('handleSheetChanges', index);
-    // }, []);
-    // const handleClosingSheet = ()=>{
-    //     bottomSheetRef.current?.close();
-    // }
-    // const handleOpeningSheet = ()=>{
-    //     bottomSheetRef.current?.expand();
-    // }
-//------------------------------------------------------------
-//inputs------------------------------------------------------
     const [number, setNumber] = useState('');
     const [type,setType] = useState(EntryType.ENTRY);
     const [description, setDescription] = useState('');
+    const [date, setDate] = useState(new Date(new Date().getTime()));
+    const [show, setShow] = useState(false);
+
+//------------------------------------------------------------
+//inputs------------------------------------------------------
 
     const onChangeNumber = (inputValue)=>{
         const numericValue = inputValue.replace(/[^0-9]/g, '');
@@ -70,8 +57,6 @@ function EntryScreen():JSX.Element{
     };
 //------------------------------------------------------------
 //date-picker-------------------------------------------------
-    const [date, setDate] = useState(new Date(new Date().getTime()));
-    const [show, setShow] = useState(false);
 
     const onChange = (event, selectedDate) => {
     const currentDate = selectedDate;
@@ -169,19 +154,5 @@ function EntryScreen():JSX.Element{
         </TouchableWithoutFeedback>
     )
 }
-
-const styles = StyleSheet.create({
-    input: {
-      marginTop: 8,
-      marginBottom: 10,
-      borderRadius: 10,
-      fontSize: 16,
-      lineHeight: 20,
-      padding: 8,
-      backgroundColor: Colors.primary.lightGray,
-      minWidth:150,
-      marginHorizontal:10
-    },
-  });
 
 export default EntryScreen;
