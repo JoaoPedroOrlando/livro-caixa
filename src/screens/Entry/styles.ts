@@ -87,3 +87,13 @@ export const DateBtn = styled.TouchableOpacity`
     justify-content: center;
     align-content: center;
 `;
+
+export const ListContainer = styled.View``;
+
+export const Title = styled.Text`
+    font-weight: 700;
+    color: ${Colors.primary.darkGray};
+    font-size: 18px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+`;

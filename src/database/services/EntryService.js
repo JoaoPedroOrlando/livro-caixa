@@ -6,11 +6,11 @@ import db from "../SQLiteDataBase";
  */
 db.transaction((tx) => {
   //<<<<<<<<<<<<<<<<<<<<<<<< USE ISSO APENAS DURANTE OS TESTES!!! >>>>>>>>>>>>>>>>>>>>>>>
-  //tx.executeSql("DROP TABLE entries;");
+  tx.executeSql("DROP TABLE entries;");
   //<<<<<<<<<<<<<<<<<<<<<<<< USE ISSO APENAS DURANTE OS TESTES!!! >>>>>>>>>>>>>>>>>>>>>>>
 
   tx.executeSql(
-    "CREATE TABLE IF NOT EXISTS entries (id INTEGER PRIMARY KEY AUTOINCREMENT,description TEXT, value REAL, dtrecord DATETIME, createdat DATETIME, cdcashbook INTEGER);"
+    "CREATE TABLE IF NOT EXISTS entries (id INTEGER PRIMARY KEY AUTOINCREMENT,description TEXT, value REAL, dtrecord DATETIME, createdat DATETIME, cdcashbook INTEGER, type TEXT);"
   );
 });
 
@@ -26,8 +26,8 @@ const create = (obj) => {
     db.transaction((tx) => {
       //comando SQL modificável
       tx.executeSql(
-        "INSERT INTO entries (description,value,dtrecord,createdat) values (?,?,?,?,?);",
-        [obj.description,obj.value,obj.dtRecord,obj.createdAt,obj.cdCashbook],
+        "INSERT INTO entries (description,value,dtrecord,createdat) values (?,?,?,?,?,?);",
+        [obj.description,obj.value,obj.dtRecord,obj.createdAt,obj.cdCashbook,obj.type],
         //-----------------------
         (_, { rowsAffected, insertId }) => {
           if (rowsAffected > 0) resolve(insertId);
@@ -133,7 +133,7 @@ const findByCdCashbook = (cdCashbook) => {
         //-----------------------
         (_, { rows }) => {
           if (rows.length > 0) resolve(rows._array);
-          else reject("Obj not found: cdCashbook=" + cdCashbook); // nenhum registro encontrado
+          else reject("Entries not found: cdCashbook=" + cdCashbook); // nenhum registro encontrado
         },
         (_, error) => reject(error) // erro interno em tx.executeSql
       );

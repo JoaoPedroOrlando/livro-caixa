@@ -14,8 +14,8 @@ export class Cashbook{
         description,
         id
     }:ICashbookProps){
-        this.createdat = createdat,
-        this.description = description,
+        this.createdat = createdat;
+        this.description = description;
         this.id = id
     }
 }

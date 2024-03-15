@@ -21,10 +21,14 @@ import {
     Input,
     TextStyled,
     AddBtn,
-    DateBtn} from "./styles";
+    DateBtn,
+    ListContainer,
+    Title
+} from "./styles";
 import Header from "../../components/Header";
 import Colors from "../../../assets/colors";
 import { Cashbook } from "../../database/models/Cashbook";
+import { Entry } from "../../database/models/Entry";
 
 export enum EntryType{
     WITHDRAWAL = "WITHDRAWAL",
@@ -40,7 +44,8 @@ function EntryScreen():JSX.Element{
     const [description, setDescription] = useState('');
     const [date, setDate] = useState(new Date(new Date().getTime()));
     const [show, setShow] = useState(false);
-
+    const [cashbook,setCashbook] = useState<Cashbook | null>(null);
+    const [entries,setEntries] = useState<Entry[] | []>([]);
 //------------------------------------------------------------
 //inputs------------------------------------------------------
 
@@ -98,6 +103,7 @@ function EntryScreen():JSX.Element{
             try{
                 const lastCashbook:Cashbook = await CashBookService.findLastCashbook();
                 if(lastCashbook){
+                    setCashbook(lastCashbook);
                     fetchCashbookEntries(lastCashbook.id);
                 }
             }catch(error){
@@ -129,7 +135,12 @@ function EntryScreen():JSX.Element{
             />
             <Body>
                 <InputsContainer>
-                    <Spacer/>
+                    {
+                        cashbook ?<Row> 
+                            <Title> { cashbook.description } </Title>
+                        </Row>
+                        :null
+                    }
                     <Row style={{justifyContent:'space-around',alignItems:'center'}}>
                         <Input 
                             style={{flex:0.5,marginRight:10}}
@@ -179,6 +190,9 @@ function EntryScreen():JSX.Element{
                      </Row>
                 </InputsContainer>
                 <Spacer/>
+                <ListContainer>
+
+                </ListContainer>
                 {show && (
                     <DateTimePicker
                         testID="dateTimePicker"
