@@ -90,8 +90,8 @@ const find = (id) => {
 };
 
 /**
- * BUSCA UM REGISTRO POR MEIO DA MARCA (brand)
- * - Recebe a marca do carro;
+ * BUSCA UM REGISTRO POR MEIO DA DESCRIÇÃO
+ * - Recebe o nome do livro caixa;
  * - Retorna uma Promise:
  *  - O resultado da Promise é um array com os objetos encontrados;
  *  - Pode retornar erro (reject) caso o ID não exista ou então caso ocorra erro no SQL;
@@ -108,6 +108,31 @@ const findByDescription = (description) => {
         (_, { rows }) => {
           if (rows.length > 0) resolve(rows._array);
           else reject("Obj not found: description=" + description); // nenhum registro encontrado
+        },
+        (_, error) => reject(error) // erro interno em tx.executeSql
+      );
+    });
+  });
+};
+
+/**
+ * BUSCA O ÚLTIMO REGISTRO SALVO NO BANCO
+ * - Retorna uma Promise:
+ *  - O resultado da Promise é um array com os objetos encontrados;
+ *  - Pode retornar erro (reject) caso o ID não exista ou então caso ocorra erro no SQL;
+ *  - Pode retornar um array vazio caso nenhum objeto seja encontrado.
+ */
+const findLastCashbook = () => {
+  return new Promise((resolve, reject) => {
+    db.transaction((tx) => {
+      //comando SQL modificável
+      tx.executeSql(
+        "SELECT * FROM cashbooks ORDER BY createdat DESC LIMIT 1;",
+        [],
+        //-----------------------
+        (_, { rows }) => {
+          if (rows.length > 0) resolve(rows._array[0]);
+          else reject("No regsiters found: "); // nenhum registro encontrado
         },
         (_, error) => reject(error) // erro interno em tx.executeSql
       );
@@ -191,6 +216,7 @@ export default {
   update,
   find,
   findByDescription,
+  findLastCashbook,
   all,
   remove,
   removeAll

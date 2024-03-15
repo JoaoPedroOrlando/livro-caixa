@@ -1,10 +1,13 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import DateTimePicker from '@react-native-community/datetimepicker';
-import {  StyleSheet, Keyboard, TouchableWithoutFeedback, View } from "react-native";
+import {  Keyboard, TouchableWithoutFeedback, View } from "react-native";
 import { Icon } from  "@rneui/themed";
 import { useNavigation } from "@react-navigation/native";
 import { useTranslation } from "react-i18next";
 import { RadioButton } from "react-native-paper";
+//db
+import CashBookService from "../../database/services/CashBookService";
+import EntryService from "../../database/services/EntryService";
 //local
 import { 
     Container, 
@@ -17,10 +20,11 @@ import {
     RadioContainer,
     Input,
     TextStyled,
-    AddBtn} from "./styles";
+    AddBtn,
+    DateBtn} from "./styles";
 import Header from "../../components/Header";
 import Colors from "../../../assets/colors";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import { Cashbook } from "../../database/models/Cashbook";
 
 export enum EntryType{
     WITHDRAWAL = "WITHDRAWAL",
@@ -73,7 +77,41 @@ function EntryScreen():JSX.Element{
         return date.toLocaleDateString(undefined, options);
     };
 //------------------------------------------------------------
+//CRUD--------------------------------------------------------
 
+
+
+//------------------------------------------------------------
+//useEffect---------------------------------------------------
+    const fetchCashbookEntries = async (cdCashbook:number) =>{
+        try{
+            const entries = await EntryService.findByCdCashbook(cdCashbook);
+            console.log(entries);
+        }catch(error){
+            console.log(error);
+        }
+    }
+
+    useEffect(() => {
+
+        const fetchLastCashbook = async () => {
+            try{
+                const lastCashbook:Cashbook = await CashBookService.findLastCashbook();
+                if(lastCashbook){
+                    fetchCashbookEntries(lastCashbook.id);
+                }
+            }catch(error){
+                console.log("error->", error);
+            }
+        };
+
+        fetchLastCashbook();
+
+        // Cleanup function
+        return () => {};
+    }, []);
+//------------------------------------------------------------
+//------------------------------------------------------------
     return (
         <TouchableWithoutFeedback onPress={dismissKeyboard}>
         <Container>
@@ -109,19 +147,19 @@ function EntryScreen():JSX.Element{
                         />
                     </Row>
                     
-                    <Row style={{justifyContent:'space-evenly',alignItems:'center',borderColor:'black',borderWidth:1}}>
+                    <Row style={{justifyContent:'space-between',alignItems:'center'}}>
                         <View>
 
-                        <TouchableOpacity onPress={showDatepicker} style={{borderRadius:10}}>
+                        <DateBtn onPress={showDatepicker}>
                             <TextStyled>
                                 {formatDate(date)}
                             </TextStyled>
-                        </TouchableOpacity>
+                        </DateBtn>
                         </View>
                         <RadioButton.Group onValueChange={onChangeType} value={type}>
                             <RadioGroupContainer>
                                 <RadioContainer>
-                                    <RadioText>{t('entry')}</RadioText>
+                                    <RadioText>{t('entry-2')}</RadioText>
                                     <RadioButton value={EntryType.ENTRY} color={Colors.primary.gray}/>
                                 </RadioContainer>
                                 <RadioContainer>

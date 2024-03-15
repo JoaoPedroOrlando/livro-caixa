@@ -48,12 +48,9 @@ function CashBookScreen(): JSX.Element{
 
     const saveCashBook  = async () => {
         try {
-            console.log("registerToEdit --> ",registerToEdit.length);
             //editar
             if(registerToEdit){
                 const cashbook = data.find(el=> el.id == registerToEdit);
-                // console.log("editar --> ",registerToEdit);
-                // console.log("cashbook --> ",cashbook);
                 if(cashbook !== undefined){
                     cashbook.description = description;
                     updateCashBook(registerToEdit,cashbook)
@@ -63,7 +60,6 @@ function CashBookScreen(): JSX.Element{
                     .catch( err => console.log(err));
                 }
             }else{ //adicionar
-                // console.log("salvar novo --> ",registerToEdit);
                 if(description){
                     CashBookService.create({description,createdAt:sqliteDateFormatter(new Date)})
                     .then(cashbook => {
@@ -84,7 +80,6 @@ function CashBookScreen(): JSX.Element{
         try {
             CashBookService.all()
             .then(cashbooks => {
-                console.log("buscou do banco:",cashbooks);
                 setData(cashbooks);
             })
             .catch( err => console.log(err) )

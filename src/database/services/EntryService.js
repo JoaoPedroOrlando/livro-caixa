@@ -6,7 +6,7 @@ import db from "../SQLiteDataBase";
  */
 db.transaction((tx) => {
   //<<<<<<<<<<<<<<<<<<<<<<<< USE ISSO APENAS DURANTE OS TESTES!!! >>>>>>>>>>>>>>>>>>>>>>>
-  tx.executeSql("DROP TABLE entries;");
+  //tx.executeSql("DROP TABLE entries;");
   //<<<<<<<<<<<<<<<<<<<<<<<< USE ISSO APENAS DURANTE OS TESTES!!! >>>>>>>>>>>>>>>>>>>>>>>
 
   tx.executeSql(
@@ -128,7 +128,7 @@ const findByCdCashbook = (cdCashbook) => {
     db.transaction((tx) => {
       //comando SQL modificável
       tx.executeSql(
-        "SELECT * FROM entries WHERE cdcashbook LIKE ?;",
+        "SELECT * FROM entries WHERE cdcashbook=?;",
         [cdCashbook],
         //-----------------------
         (_, { rows }) => {

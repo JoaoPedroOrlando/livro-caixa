@@ -8,8 +8,7 @@ export const Container = styled.View`
 `;
 
 export const InputsContainer = styled.View`
-    /* flex:0.3; */
-    background-color: beige;
+
 `;
 
 export const Body = styled.View`
@@ -35,12 +34,12 @@ export const RadioText = styled.Text`
 `;
 
 export const RadioGroupContainer = styled.View`
-border: 1px solid black;
     display: flex;
     flex-direction: row;
     /* background-color: beige; */
     background-color: ${Colors.primary.lightGray};
     border-radius: 10px;
+    padding: 0px 10px 0px 10px;
 `;
 
 export const RadioContainer = styled.View`
@@ -59,7 +58,6 @@ export const Input = styled.TextInput`
 `;
 
 export const TextStyled = styled.Text`
-border: 1px solid black;
     height: 55px;
     margin-top: 8px;
     margin-bottom: 10px;
@@ -68,6 +66,8 @@ border: 1px solid black;
     line-height: 20px;
     padding: 8px;
     text-align: center;
+    text-align:center;
+    padding-top:15px;
     background-color: ${Colors.primary.lightGray};
 `;
 
@@ -77,5 +77,13 @@ export const AddBtn = styled.TouchableOpacity`
     align-content: center;
     border-radius:10px;
     padding: 10px;
-    border: 1px solid black;
+    /* border: 1px solid black; */
+`;
+
+export const DateBtn = styled.TouchableOpacity`
+    border-radius:10px;
+    display:flex;
+    align-items:center;
+    justify-content: center;
+    align-content: center;
 `;
