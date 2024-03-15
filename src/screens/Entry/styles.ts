@@ -76,6 +76,8 @@ export const AddBtn = styled.TouchableOpacity`
     background-color: ${Colors.disable.green};
     align-content: center;
     border-radius:10px;
+    align-content: center;
+    text-align: center;
     padding: 10px;
     /* border: 1px solid black; */
 `;

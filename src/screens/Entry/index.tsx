@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import DateTimePicker from '@react-native-community/datetimepicker';
-import {  Keyboard, TouchableWithoutFeedback, View } from "react-native";
+import {  Keyboard, ToastAndroid, TouchableWithoutFeedback, View } from "react-native";
 import { Icon } from  "@rneui/themed";
 import { useNavigation } from "@react-navigation/native";
 import { useTranslation } from "react-i18next";
@@ -28,19 +28,15 @@ import {
 import Header from "../../components/Header";
 import Colors from "../../../assets/colors";
 import { Cashbook } from "../../database/models/Cashbook";
-import { Entry } from "../../database/models/Entry";
-
-export enum EntryType{
-    WITHDRAWAL = "WITHDRAWAL",
-    ENTRY = "ENTRY"
-}
+import { Entry, EntryTypeEnum } from "../../database/models/Entry";
+import { sqliteDateFormatter } from "../../../assets/utils/SQLiteDateFormatter";
 
 function EntryScreen():JSX.Element{
 //states------------------------------------------------------
     const navigation = useNavigation();
     const { t } = useTranslation();
-    const [number, setNumber] = useState('');
-    const [type,setType] = useState(EntryType.ENTRY);
+    const [value, setValue] = useState('');
+    const [type,setType] = useState(EntryTypeEnum.INFLOW);
     const [description, setDescription] = useState('');
     const [date, setDate] = useState(new Date(new Date().getTime()));
     const [show, setShow] = useState(false);
@@ -56,7 +52,7 @@ function EntryScreen():JSX.Element{
             currency: 'BRL',
             minimumFractionDigits: 2,
         }).format(parseInt(numericValue) / 100);
-        setNumber(formattedValue);
+        setValue(formattedValue);
     }
     const onChangeType = (radioValue)=>{
         setType(radioValue)
@@ -84,7 +80,34 @@ function EntryScreen():JSX.Element{
 //------------------------------------------------------------
 //CRUD--------------------------------------------------------
 
-
+    const saveEntry = async ()=>{
+        try{
+            const currencyValue = convertCurrencyStringToNumber(value);
+            if(
+                cashbook == null ||
+                currencyValue == null ||
+                description == '' ||
+                date == null
+            ){
+                showToast(t('incomplete-data'))
+                return;
+            }
+            const entry:Entry = {
+                description,
+                createdAt:sqliteDateFormatter(date),
+                dtRecord: sqliteDateFormatter(date),
+                value: currencyValue,
+                type,
+                cdCashbook: cashbook.id
+            }
+            EntryService.create(entry).then(res=>{
+                console.log("Save->",res)
+            }).catch(error =>{ console.log(error)})
+        }catch(error){
+            showToast(t('error-saving'));
+        }
+        
+    }
 
 //------------------------------------------------------------
 //useEffect---------------------------------------------------
@@ -117,6 +140,28 @@ function EntryScreen():JSX.Element{
         return () => {};
     }, []);
 //------------------------------------------------------------
+//helpers-----------------------------------------------------
+
+const showToast = (msg:string) => {
+    ToastAndroid.showWithGravity(
+        t(msg),
+        ToastAndroid.SHORT,
+        ToastAndroid.CENTER,
+    );
+  };
+
+const convertCurrencyStringToNumber = (currencyString: string): number =>{
+    try{
+        const cleanedString = currencyString.replace(/[^\d.,]/g, '');
+        const dotFormattedString = cleanedString.replace(',', '.');
+        const numberValue = parseFloat(dotFormattedString);
+        return numberValue;
+    }catch(erro){
+        return null;
+    }
+
+}
+
 //------------------------------------------------------------
     return (
         <TouchableWithoutFeedback onPress={dismissKeyboard}>
@@ -144,7 +189,7 @@ function EntryScreen():JSX.Element{
                     <Row style={{justifyContent:'space-around',alignItems:'center'}}>
                         <Input 
                             style={{flex:0.5,marginRight:10}}
-                            value={number}
+                            value={value}
                             placeholder="R$ 0,00"
                             keyboardType="numeric" 
                             onChangeText={onChangeNumber}
@@ -171,15 +216,17 @@ function EntryScreen():JSX.Element{
                             <RadioGroupContainer>
                                 <RadioContainer>
                                     <RadioText>{t('entry-2')}</RadioText>
-                                    <RadioButton value={EntryType.ENTRY} color={Colors.primary.gray}/>
+                                    <RadioButton value={EntryTypeEnum.INFLOW} color={Colors.primary.gray}/>
                                 </RadioContainer>
                                 <RadioContainer>
                                     <RadioText>{t('withdrawal')}</RadioText>
-                                    <RadioButton value={EntryType.WITHDRAWAL} color={Colors.primary.gray}/>
+                                    <RadioButton value={EntryTypeEnum.OUTFLOW} color={Colors.primary.gray}/>
                                 </RadioContainer>
                             </RadioGroupContainer>
                         </RadioButton.Group>
-                        <AddBtn >
+                        <AddBtn 
+                            onPress={saveEntry}
+                        >
                             <Icon  
                                 name="add"
                                 type='ionicon'

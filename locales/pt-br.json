@@ -8,11 +8,13 @@
     "new":"Novo",
     "entry":"Lançamentos",
     "entry-value":"Valor do lançamento",
-    "withdrawal":"saída",
+    "withdrawal":"saida",
     "description":"descrição",
     "new-cash-book":"Novo Livro Caixa",
     "want-to-delete":"Deseja realmente deletar o registro?",
     "delete":"Deletar",
-    "entry-2":"Entrada"
+    "entry-2":"Entrada",
+    "incomplete-data":"Informações incompletas",
+    "error-saving":"Erro ao salvar Informações"
 }
   

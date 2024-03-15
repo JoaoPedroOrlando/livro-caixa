@@ -6,7 +6,7 @@ import db from "../SQLiteDataBase";
  */
 db.transaction((tx) => {
   //<<<<<<<<<<<<<<<<<<<<<<<< USE ISSO APENAS DURANTE OS TESTES!!! >>>>>>>>>>>>>>>>>>>>>>>
-  tx.executeSql("DROP TABLE entries;");
+  // tx.executeSql("DROP TABLE entries;");
   //<<<<<<<<<<<<<<<<<<<<<<<< USE ISSO APENAS DURANTE OS TESTES!!! >>>>>>>>>>>>>>>>>>>>>>>
 
   tx.executeSql(
@@ -26,7 +26,7 @@ const create = (obj) => {
     db.transaction((tx) => {
       //comando SQL modificável
       tx.executeSql(
-        "INSERT INTO entries (description,value,dtrecord,createdat) values (?,?,?,?,?,?);",
+        "INSERT INTO entries (description,value,dtrecord,createdat,cdcashbook,type) values (?,?,?,?,?,?);",
         [obj.description,obj.value,obj.dtRecord,obj.createdAt,obj.cdCashbook,obj.type],
         //-----------------------
         (_, { rowsAffected, insertId }) => {

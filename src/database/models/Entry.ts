@@ -2,13 +2,13 @@ interface IEntryProps{
     id?:number;
     description?:string;
     value?:number;
-    dtRecord?:Date;
-    createdAt?:Date;
+    dtRecord?:string;
+    createdAt?:string;
     cdCashbook?:number;
     type?:EntryTypeEnum
 }
 
-enum EntryTypeEnum{
+export enum EntryTypeEnum{
     INFLOW = "INFLOW", //entrada de recurso
     OUTFLOW = "OUTFLOW" //saída de recurso
 }
@@ -17,8 +17,8 @@ export class Entry{
     id?:number;
     description?:string;
     value?:number;
-    dtRecord?:Date;
-    createdAt?:Date;
+    dtRecord?:string;
+    createdAt?:string;
     cdCashbook?:number;
     type?:EntryTypeEnum;
     constructor({

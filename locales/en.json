@@ -13,6 +13,8 @@
     "new-cash-book":"New Cash Book",
     "want-to-delete":"Do you want to delete the register?",
     "delete":"Delete",
-    "entry-2":"Entry"
+    "entry-2":"Entry",
+    "incomplete-data":"Incomplete data",
+    "error-saving":"Error saving data"
 }
   
