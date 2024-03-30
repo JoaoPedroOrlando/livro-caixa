@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import DateTimePicker from '@react-native-community/datetimepicker';
-import {  Keyboard, ToastAndroid, TouchableWithoutFeedback, View } from "react-native";
+import {  FlatList, Keyboard, ToastAndroid, TouchableWithoutFeedback, View } from "react-native";
 import { Icon } from  "@rneui/themed";
 import { useNavigation } from "@react-navigation/native";
 import { useTranslation } from "react-i18next";
@@ -30,6 +30,8 @@ import Colors from "../../../assets/colors";
 import { Cashbook } from "../../database/models/Cashbook";
 import { Entry, EntryTypeEnum } from "../../database/models/Entry";
 import { sqliteDateFormatter } from "../../../assets/utils/SQLiteDateFormatter";
+import { SafeAreaView } from "react-native-safe-area-context";
+import EntryItem from "../../components/EntryItem";
 
 function EntryScreen():JSX.Element{
 //states------------------------------------------------------
@@ -114,6 +116,7 @@ function EntryScreen():JSX.Element{
     const fetchCashbookEntries = async (cdCashbook:number) =>{
         try{
             const entries = await EntryService.findByCdCashbook(cdCashbook);
+            setEntries(entries);
             console.log(entries);
         }catch(error){
             console.log(error);
@@ -238,7 +241,22 @@ const convertCurrencyStringToNumber = (currencyString: string): number =>{
                 </InputsContainer>
                 <Spacer/>
                 <ListContainer>
-
+                    <SafeAreaView>
+                        <FlatList
+                            data={entries}
+                            renderItem={({item}) => {
+                                return <EntryItem
+                                    item={item}
+                                    enableDelete={true}
+                                    onPress={()=>{console.log("Fui clicado")}}
+                                    onDeleteAction={()=>{}}
+                                    onIconAction={()=>{}}
+                                    onLongPress={()=>{console.log("Long press")}}
+                                />
+                            }}
+                            keyExtractor={item => item.id.toString()}
+                        />
+                    </SafeAreaView>
                 </ListContainer>
                 {show && (
                     <DateTimePicker

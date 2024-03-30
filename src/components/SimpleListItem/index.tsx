@@ -1,6 +1,6 @@
 import React from 'react';
-import {Text} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 //local
 import { 
     ItemContainer,
@@ -9,7 +9,6 @@ import {
     Description,
 } from './styles';
 import Colors from '../../../assets/colors';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 
 interface IListItemProps {
     item:IListItem;
