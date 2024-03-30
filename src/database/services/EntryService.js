@@ -6,7 +6,7 @@ import db from "../SQLiteDataBase";
  */
 db.transaction((tx) => {
   //<<<<<<<<<<<<<<<<<<<<<<<< USE ISSO APENAS DURANTE OS TESTES!!! >>>>>>>>>>>>>>>>>>>>>>>
-  // tx.executeSql("DROP TABLE entries;");
+  //tx.executeSql("DROP TABLE entries;");
   //<<<<<<<<<<<<<<<<<<<<<<<< USE ISSO APENAS DURANTE OS TESTES!!! >>>>>>>>>>>>>>>>>>>>>>>
 
   tx.executeSql(
@@ -27,7 +27,7 @@ const create = (obj) => {
       //comando SQL modificável
       tx.executeSql(
         "INSERT INTO entries (description,value,dtrecord,createdat,cdcashbook,type) values (?,?,?,?,?,?);",
-        [obj.description,obj.value,obj.dtRecord,obj.createdAt,obj.cdCashbook,obj.type],
+        [obj.description,obj.value,obj.dtrecord,obj.createdat,obj.cdcashbook,obj.type],
         //-----------------------
         (_, { rowsAffected, insertId }) => {
           if (rowsAffected > 0) resolve(insertId);
@@ -123,17 +123,17 @@ const findByDescription = (description) => {
  *  - Pode retornar erro (reject) caso o ID não exista ou então caso ocorra erro no SQL;
  *  - Pode retornar um array vazio caso nenhum objeto seja encontrado.
  */
-const findByCdCashbook = (cdCashbook) => {
+const findByCdCashbook = (cdcashbook) => {
   return new Promise((resolve, reject) => {
     db.transaction((tx) => {
       //comando SQL modificável
       tx.executeSql(
         "SELECT * FROM entries WHERE cdcashbook=?;",
-        [cdCashbook],
+        [cdcashbook],
         //-----------------------
         (_, { rows }) => {
           if (rows.length > 0) resolve(rows._array);
-          else reject("Entries not found: cdCashbook=" + cdCashbook); // nenhum registro encontrado
+          else reject("Entries not found: cdCashbook=" + cdcashbook); // nenhum registro encontrado
         },
         (_, error) => reject(error) // erro interno em tx.executeSql
       );

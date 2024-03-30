@@ -10,24 +10,33 @@ import {
     CheckIcon
 } from './styles';
 import Colors from '../../../assets/colors';
-import { Entry } from "../../database/models/Entry";
+import { Entry, EntryTypeEnum } from "../../database/models/Entry";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import { formatStrDate } from "../../shared/helpers/date-helper";
 
 interface IEntryItemProps {
     item:Entry;
-    onIconAction?: (key:string) => void;
-    onDeleteAction?: (key:string) => void;
-    onLongPress?: (key:string) => void;
+    onIconAction?: (key:number) => void;
+    onDeleteAction?: (key:number) => void;
+    onLongPress?: (key:number) => void;
     onPress?: () => void;
     disabled?: boolean;
     enableDelete?:boolean;
 }
 
 function EntryItem(
-    {item,onPress,onLongPress,onIconAction,onDeleteAction,disabled=false, enableDelete}:IEntryItemProps
+    {item,onPress,onIconAction,onDeleteAction,disabled=false, enableDelete}:IEntryItemProps
 ):JSX.Element{
 
     const [optionsVisible, setOptionsVisible] = useState(false);
+
+    const handleDelete = ()=> {
+        onDeleteAction(item.id);
+    }
+
+    const handleEdit = ()=> {
+        onIconAction(item.id);
+    }
 
     return <ItemContainer
         onPress={onPress}
@@ -35,16 +44,22 @@ function EntryItem(
     >   
         {
             optionsVisible === false ? (<Row>
-                <TextContainer>
-                        <Description>
-                            {item.description}
-                        </Description>
-                    </TextContainer>
-                    <TextContainer>
-                        <Description>
-                            {item.value}
-                        </Description>
-                       </TextContainer>
+                <TextContainer >
+                     <Description type = {item.type}>
+                           {item.description} 
+                    </Description>
+                </TextContainer>
+                <TextContainer >
+                    <Description type = {item.type}>
+                        R$ {item.type === EntryTypeEnum.INFLOW ? "" : " -"}
+                        {item.value}
+                    </Description>
+                </TextContainer>
+                <TextContainer >
+                    <Description type = {item.type}>
+                        {formatStrDate(item.dtrecord)}
+                    </Description>
+                </TextContainer>
                 </Row>)
             : (<Row style={{justifyContent:"space-between"}}>
                 <IconContainer>
@@ -56,13 +71,13 @@ function EntryItem(
                 </IconContainer>
                 <IconContainer>
                     <TouchableOpacity
-                        onPress={()=>{}}
+                        onPress={handleEdit}
                         style={{marginRight:20}}
                     >
                         <Icon name= {'pencil'} size={30} color={Colors.primary.darkGray} style={{ opacity: 0.35 }} /> 
                     </TouchableOpacity>
                     <TouchableOpacity
-                        onPress={()=>{}}
+                        onPress={handleDelete}
                     >
                         <Icon name= {'delete'} size={30} color={Colors.primary.red} style={{ opacity: 0.35 }} /> 
                     </TouchableOpacity>

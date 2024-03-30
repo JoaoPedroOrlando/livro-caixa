@@ -1,15 +1,19 @@
 import styled from "styled-components/native";
 import Colors from "../../../assets/colors";
+import { EntryTypeEnum } from "../../database/models/Entry";
 
 export const ItemContainer = styled.Pressable`
-    height: 50px;
+    /* height: 50px; */
     margin-bottom: 10px;
-    border-radius: 10px;
+    /* border-radius: 10px; */
     font-size: 16px;
     line-height: 20px;
     padding: 8px;
-    background-color: ${Colors.palette.input};  
+    /* background-color: ${Colors.palette.input};   */
     /* border: 1px solid black; */
+    border-bottom-width: 1px;
+    border-color: ${Colors.primary.gray};
+    
 `;
 export const Row = styled.View`
     display: flex;
@@ -23,11 +27,11 @@ export const TextContainer = styled.View`
     /* border: 1px solid black; */
 `;
 
-export const Description = styled.Text`
-    color: ${Colors.palette.textColor};
+export const Description = styled.Text<{type:EntryTypeEnum}>`
+    color: ${(props) => props.type === EntryTypeEnum.INFLOW ? Colors.primary.green : Colors.primary.red};
     text-transform: capitalize;
     font-weight: 500;
-    font-size: 18px;
+    font-size: 16px;
     /* border: 1px solid blue; */
 `;
 

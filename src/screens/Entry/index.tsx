@@ -96,11 +96,11 @@ function EntryScreen():JSX.Element{
             }
             const entry:Entry = {
                 description,
-                createdAt:sqliteDateFormatter(date),
-                dtRecord: sqliteDateFormatter(date),
+                createdat:sqliteDateFormatter(date),
+                dtrecord: sqliteDateFormatter(date),
                 value: currencyValue,
                 type,
-                cdCashbook: cashbook.id
+                cdcashbook: cashbook.id
             }
             EntryService.create(entry).then(res=>{
                 console.log("Save->",res)

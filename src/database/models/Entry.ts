@@ -2,9 +2,9 @@ interface IEntryProps{
     id?:number;
     description?:string;
     value?:number;
-    dtRecord?:string;
-    createdAt?:string;
-    cdCashbook?:number;
+    dtrecord?:string;
+    createdat?:string;
+    cdcashbook?:number;
     type?:EntryTypeEnum
 }
 
@@ -17,25 +17,25 @@ export class Entry{
     id?:number;
     description?:string;
     value?:number;
-    dtRecord?:string;
-    createdAt?:string;
-    cdCashbook?:number;
+    dtrecord?:string;
+    createdat?:string;
+    cdcashbook?:number;
     type?:EntryTypeEnum;
     constructor({
-        createdAt,
+        createdat,
         description,
         id,
-        dtRecord,
-        cdCashbook,
+        dtrecord,
+        cdcashbook,
         value,
         type,
     }:IEntryProps){
-        this.createdAt = createdAt;
+        this.createdat = createdat;
         this.description = description;
         this.id = id;
         this.value = value;
-        this.dtRecord = dtRecord;
-        this.cdCashbook = cdCashbook;
+        this.dtrecord = dtrecord;
+        this.cdcashbook = cdcashbook;
         this.type = type;
     }
 }
