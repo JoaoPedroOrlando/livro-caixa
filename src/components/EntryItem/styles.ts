@@ -12,7 +12,7 @@ export const ItemContainer = styled.Pressable`
     /* background-color: ${Colors.palette.input};   */
     /* border: 1px solid black; */
     border-bottom-width: 1px;
-    border-color: ${Colors.primary.gray};
+    border-color: ${Colors.primary.lightGray};
     
 `;
 export const Row = styled.View`
@@ -28,7 +28,7 @@ export const TextContainer = styled.View`
 `;
 
 export const Description = styled.Text<{type:EntryTypeEnum}>`
-    color: ${(props) => props.type === EntryTypeEnum.INFLOW ? Colors.primary.green : Colors.primary.red};
+    color: ${(props) => props.type === EntryTypeEnum.INFLOW ? Colors.primary.gray : Colors.primary.gray};
     text-transform: capitalize;
     font-weight: 500;
     font-size: 16px;
@@ -43,7 +43,8 @@ export const IconContainer = styled.View`
 
 export const CheckIcon = styled.TouchableOpacity`
     margin-left: 5px;
-    /* padding: 2px;
-    background-color: ${Colors.disable.green};
-    border-radius: 8px; */
+`;
+
+export const CashText = styled.Text<{type:EntryTypeEnum}>`
+color: ${(props) => props.type === EntryTypeEnum.INFLOW ? Colors.primary.green : Colors.primary.red};
 `;

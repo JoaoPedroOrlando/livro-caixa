@@ -7,16 +7,17 @@ import {
     IconContainer,
     Description,
     Row,
-    CheckIcon
+    CheckIcon,
+    CashText
 } from './styles';
 import Colors from '../../../assets/colors';
 import { Entry, EntryTypeEnum } from "../../database/models/Entry";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import { formatStrDate } from "../../shared/helpers/date-helper";
-
+import { formatStrDate } from "../../shared/helpers/dateHelper";
+import { formatNumberToCurrencyStr } from "../../shared/helpers/currencyHelper";
 interface IEntryItemProps {
     item:Entry;
-    onIconAction?: (key:number) => void;
+    onEditAction?: (item:Entry) => void;
     onDeleteAction?: (key:number) => void;
     onLongPress?: (key:number) => void;
     onPress?: () => void;
@@ -25,7 +26,7 @@ interface IEntryItemProps {
 }
 
 function EntryItem(
-    {item,onPress,onIconAction,onDeleteAction,disabled=false, enableDelete}:IEntryItemProps
+    {item,onPress,onEditAction,onDeleteAction,disabled=false, enableDelete}:IEntryItemProps
 ):JSX.Element{
 
     const [optionsVisible, setOptionsVisible] = useState(false);
@@ -35,7 +36,8 @@ function EntryItem(
     }
 
     const handleEdit = ()=> {
-        onIconAction(item.id);
+        setOptionsVisible(false);
+        onEditAction(item);
     }
 
     return <ItemContainer
@@ -50,10 +52,10 @@ function EntryItem(
                     </Description>
                 </TextContainer>
                 <TextContainer >
-                    <Description type = {item.type}>
-                        R$ {item.type === EntryTypeEnum.INFLOW ? "" : " -"}
-                        {item.value}
-                    </Description>
+                    <CashText type = {item.type}>
+                        {/* R$ {item.type === EntryTypeEnum.INFLOW ? "" : " -"} */}
+                        {formatNumberToCurrencyStr(item.value)}
+                    </CashText>
                 </TextContainer>
                 <TextContainer >
                     <Description type = {item.type}>

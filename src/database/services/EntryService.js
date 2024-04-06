@@ -51,8 +51,8 @@ const update = (id, obj) => {
     db.transaction((tx) => {
       //comando SQL modificável
       tx.executeSql(
-        "UPDATE entries SET description=? WHERE id=?;",
-        [obj.description, id],
+        "UPDATE entries SET description=?, value=?, dtrecord=?, type=? WHERE id=?;",
+        [obj.description,obj.value,obj.dtrecord,obj.type, id],
         //-----------------------
         (_, { rowsAffected }) => {
           if (rowsAffected > 0) resolve(rowsAffected);
