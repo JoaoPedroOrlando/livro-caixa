@@ -128,7 +128,7 @@ const findByCdCashbook = (cdcashbook) => {
     db.transaction((tx) => {
       //comando SQL modificável
       tx.executeSql(
-        "SELECT * FROM entries WHERE cdcashbook=?;",
+        "SELECT * FROM entries WHERE cdcashbook=? ORDER BY dtrecord ASC;",
         [cdcashbook],
         //-----------------------
         (_, { rows }) => {

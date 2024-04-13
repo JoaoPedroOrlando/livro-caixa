@@ -46,5 +46,5 @@ export const CheckIcon = styled.TouchableOpacity`
 `;
 
 export const CashText = styled.Text<{type:EntryTypeEnum}>`
-color: ${(props) => props.type === EntryTypeEnum.INFLOW ? Colors.primary.green : Colors.primary.red};
+    color: ${(props) => props.type === EntryTypeEnum.INFLOW ? Colors.primary.green : Colors.primary.red};
 `;

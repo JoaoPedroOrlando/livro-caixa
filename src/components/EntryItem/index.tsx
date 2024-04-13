@@ -53,7 +53,6 @@ function EntryItem(
                 </TextContainer>
                 <TextContainer >
                     <CashText type = {item.type}>
-                        {/* R$ {item.type === EntryTypeEnum.INFLOW ? "" : " -"} */}
                         {formatNumberToCurrencyStr(item.value)}
                     </CashText>
                 </TextContainer>

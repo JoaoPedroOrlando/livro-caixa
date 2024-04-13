@@ -23,7 +23,10 @@ import {
     AddBtn,
     DateBtn,
     ListContainer,
-    Title
+    Title,
+    Footer,
+    TotalText,
+    TotalTextValue 
 } from "./styles";
 import Header from "../../components/Header";
 import Colors from "../../../assets/colors";
@@ -32,7 +35,7 @@ import { Entry, EntryTypeEnum } from "../../database/models/Entry";
 import { sqliteDateFormatter } from "../../../assets/utils/SQLiteDateFormatter";
 import { SafeAreaView } from "react-native-safe-area-context";
 import EntryItem from "../../components/EntryItem";
-import { formatStringToCurrencyStr } from "../../shared/helpers/currencyHelper";
+import { formatNumberToCurrencyStr, formatStringToCurrencyStr } from "../../shared/helpers/currencyHelper";
 
 function EntryScreen():JSX.Element{
 //states------------------------------------------------------
@@ -44,7 +47,7 @@ function EntryScreen():JSX.Element{
     const [date, setDate] = useState(new Date(new Date().getTime()));
     const [show, setShow] = useState(false);
     const [cashbook,setCashbook] = useState<Cashbook | null>(null);
-    const [entries,setEntries] = useState<Entry[] | []>([]);
+    const [entries,setEntries] = useState<Entry[] >([]);
     const [updateOperationId,setUpdateOperationId] = useState < number | null >(null);
 //------------------------------------------------------------
 //inputs------------------------------------------------------
@@ -116,6 +119,7 @@ function EntryScreen():JSX.Element{
             console.log("Saved->",entry);
             EntryService.create(entry).then(res=>{
                 resetInputs();
+                fetchCashbookEntries(cashbook.id);
             }).catch(error =>{ console.log(error)})
         }catch(error){
             showToast(t('error-saving'));
@@ -148,6 +152,7 @@ function EntryScreen():JSX.Element{
             console.log("Updated->",entry);
             EntryService.update(entry.id,entry).then(res=>{
                 resetInputs();
+                fetchCashbookEntries(cashbook.id);
             }).catch(error =>{ console.log(error)})
         }catch(error){
             showToast(t('error-saving'));
@@ -167,7 +172,6 @@ function EntryScreen():JSX.Element{
         try{
             const entries = await EntryService.findByCdCashbook(cdCashbook);
             setEntries(entries);
-            // console.log(entries);
         }catch(error){
             console.log(error);
         }
@@ -213,6 +217,20 @@ const convertCurrencyStringToNumber = (currencyString: string): number =>{
         return null;
     }
 
+}
+
+const fetchTotal = (): number => {
+    return entries.reduce((total,entry)=>{ 
+        if(entry.type === EntryTypeEnum.INFLOW){
+            return total + entry.value;
+        }else {
+            return total - entry.value;
+        }
+    },0);
+}
+
+const getFormatedTotalValue = (): string => {
+    return formatNumberToCurrencyStr(fetchTotal());
 }
 
 //------------------------------------------------------------
@@ -289,10 +307,10 @@ const convertCurrencyStringToNumber = (currencyString: string): number =>{
                         </AddBtn>
                      </Row>
                 </InputsContainer>
-                <Spacer/>
                 <ListContainer>
                     <SafeAreaView>
                         <FlatList
+                            horizontal={false} 
                             data={entries}
                             renderItem={({item}) => {
                                 return <EntryItem
@@ -317,6 +335,16 @@ const convertCurrencyStringToNumber = (currencyString: string): number =>{
                     />
                 )}
             </Body>
+            <Footer>
+                <Row>
+                <TotalText>
+                    Total:{" "}
+                </TotalText>
+                <TotalTextValue value={fetchTotal()}>
+                {getFormatedTotalValue()}
+                </TotalTextValue>
+                </Row>
+            </Footer>
         </Container>
         </TouchableWithoutFeedback>
     )

@@ -8,25 +8,28 @@ export const Container = styled.View`
 `;
 
 export const InputsContainer = styled.View`
-
 `;
 
 export const Body = styled.View`
-    flex:1;
+    flex:0.9;
     padding: 10px;
     background-color: ${Colors.primary.white};
-    /* border-top-left-radius: 32px;
-    border-top-right-radius: 32px; */
 `;
 
-export const Spacer = styled.View`
-    margin:10px;
+export const Footer = styled.View`
+    /* padding: 8px 20px 0px 20px;
+    padding-top:15px; */
+    background-color: ${Colors.primary.lightGray};
+    flex:0.1;
 `;
+
+// export const Spacer = styled.View`
+//     margin:10px;
+// `;
 
 export const Row = styled.View`
     display: flex;
     flex-direction: row;
-    /* background-color: beige; */
 `;
 
 export const RadioText = styled.Text`
@@ -36,7 +39,6 @@ export const RadioText = styled.Text`
 export const RadioGroupContainer = styled.View`
     display: flex;
     flex-direction: row;
-    /* background-color: beige; */
     background-color: ${Colors.primary.lightGray};
     border-radius: 10px;
     padding: 0px 10px 0px 10px;
@@ -66,7 +68,6 @@ export const TextStyled = styled.Text`
     line-height: 20px;
     padding: 8px;
     text-align: center;
-    text-align:center;
     padding-top:15px;
     background-color: ${Colors.primary.lightGray};
 `;
@@ -90,7 +91,9 @@ export const DateBtn = styled.TouchableOpacity`
     align-content: center;
 `;
 
-export const ListContainer = styled.View``;
+export const ListContainer = styled.View`
+    flex:1;
+`;
 
 export const Title = styled.Text`
     font-weight: 700;
@@ -98,4 +101,17 @@ export const Title = styled.Text`
     font-size: 18px;
     padding-top: 10px;
     padding-bottom: 10px;
+`;
+
+export const TotalText = styled.Text`
+    padding: 20px 0px 0px 20px;
+    font-weight: 700;
+    font-size: 16px;
+`;
+
+export const TotalTextValue = styled.Text<{value:number}>`
+    padding: 20px 0px 0px 0px;
+    color: ${(props) => props.value > 0  ? Colors.primary.green : Colors.primary.red};
+    font-weight: 500;
+    font-size: 16px;
 `;
