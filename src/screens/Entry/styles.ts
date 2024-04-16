@@ -23,9 +23,9 @@ export const Footer = styled.View`
     flex:0.1;
 `;
 
-// export const Spacer = styled.View`
-//     margin:10px;
-// `;
+export const Spacer = styled.View`
+    margin:10px;
+`;
 
 export const Row = styled.View`
     display: flex;
@@ -114,4 +114,15 @@ export const TotalTextValue = styled.Text<{value:number}>`
     color: ${(props) => props.value > 0  ? Colors.primary.green : Colors.primary.red};
     font-weight: 500;
     font-size: 16px;
+`;
+
+export const ChangeCashbookBtn = styled.TouchableOpacity`
+    /* height: 55px; */
+    justify-content:center;
+    align-content: center;
+    border-radius:10px;
+    align-content: center;
+    text-align: center;
+    padding: 10px;
+    /* border: 1px solid black; */
 `;

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {  FlatList, Keyboard, ToastAndroid, TouchableWithoutFeedback, View } from "react-native";
 import { Icon } from  "@rneui/themed";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { useTranslation } from "react-i18next";
 import { RadioButton } from "react-native-paper";
 //db
@@ -12,7 +12,6 @@ import EntryService from "../../database/services/EntryService";
 import { 
     Container, 
     Body,
-    Spacer,
     Row, 
     InputsContainer,
     RadioText,
@@ -22,6 +21,7 @@ import {
     TextStyled,
     AddBtn,
     DateBtn,
+    ChangeCashbookBtn,
     ListContainer,
     Title,
     Footer,
@@ -37,7 +37,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import EntryItem from "../../components/EntryItem";
 import { formatNumberToCurrencyStr, formatStringToCurrencyStr } from "../../shared/helpers/currencyHelper";
 
-function EntryScreen():JSX.Element{
+function EntryScreen({route}):JSX.Element{
 //states------------------------------------------------------
     const navigation = useNavigation();
     const { t } = useTranslation();
@@ -49,6 +49,7 @@ function EntryScreen():JSX.Element{
     const [cashbook,setCashbook] = useState<Cashbook | null>(null);
     const [entries,setEntries] = useState<Entry[] >([]);
     const [updateOperationId,setUpdateOperationId] = useState < number | null >(null);
+    const selectedCashbook = route.param?.selectedCashbook || null;
 //------------------------------------------------------------
 //inputs------------------------------------------------------
 
@@ -190,7 +191,7 @@ function EntryScreen():JSX.Element{
                 console.log("error->", error);
             }
         };
-
+        console.log("Selected cash ->",selectedCashbook)
         fetchLastCashbook();
 
         // Cleanup function
@@ -233,6 +234,10 @@ const getFormatedTotalValue = (): string => {
     return formatNumberToCurrencyStr(fetchTotal());
 }
 
+const navigateToCashbookSelection = (): void =>{
+    navigation.navigate('CashBookSelection');
+}
+
 //------------------------------------------------------------
     return (
         <TouchableWithoutFeedback onPress={dismissKeyboard}>
@@ -252,8 +257,18 @@ const getFormatedTotalValue = (): string => {
             <Body>
                 <InputsContainer>
                     {
-                        cashbook ?<Row> 
+                        cashbook ? <Row> 
                             <Title> { cashbook.description } </Title>
+                            <ChangeCashbookBtn
+                                onPress={navigateToCashbookSelection}
+                            >
+                                <Icon  
+                                    name="caret-forward-outline"
+                                    type='ionicon'
+                                    color={Colors.primary.gray}
+                                    size={20}
+                                />
+                            </ChangeCashbookBtn>
                         </Row>
                         :null
                     }
