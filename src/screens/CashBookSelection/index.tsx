@@ -1,36 +1,24 @@
-import React, { useCallback, useEffect} from 'react';
-import { TouchableWithoutFeedback, Keyboard, FlatList, Text} from 'react-native';
+import React, { useEffect} from 'react';
+import { TouchableWithoutFeedback, Keyboard, FlatList} from 'react-native';
 import {  SafeAreaView } from 'react-native-safe-area-context';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Icon } from  "@rneui/themed";
-import { useNavigation } from "@react-navigation/native";
 //db
 import CashBookService from '../../database/services/CashBookService';
 //local
 import Header from '../../components/Header';
 import { 
-    Input,
     Container,
-    Row,
     Body,
-    AddBtn,
-    SheetContainer,
-    WarnningText,
-    DeleteBtn,
-    DeleteBtnText
  } from './styles';
 import Colors from "../../../assets/colors";
 import SimpleListItem from '../../components/SimpleListItem';
-import { Spacer } from '../Home/styles';
-import {sqliteDateFormatter} from '../../../assets/utils/SQLiteDateFormatter';
 
-function CashBookSelectionScreen(): JSX.Element{
+function CashBookSelectionScreen({ route, navigation }): JSX.Element{
 //states------------------------------------------------------  
-    const [description,setDescription] = useState('');
     const [data, setData] = useState([]);
     const { t } = useTranslation();
-    const navigation = useNavigation();
 
 //------------------------------------------------------------
 //inputs------------------------------------------------------  
@@ -45,6 +33,7 @@ function CashBookSelectionScreen(): JSX.Element{
         try {
             CashBookService.all()
             .then(cashbooks => {
+                console.log("Cashbooks-> ",cashbooks)
                 setData(cashbooks);
             })
             .catch( err => console.log(err) )
@@ -65,6 +54,16 @@ function CashBookSelectionScreen(): JSX.Element{
 //bottom-sheet------------------------------------------------
 
 //------------------------------------------------------------
+//helpers ----------------------------------------------------
+
+    const handleSelection = (id:string) =>{
+        navigation.navigate({
+            name: 'Entry',
+            params: { selectedCashBookId: id },
+            merge: true,
+        });
+    }
+    
 //------------------------------------------------------------
 
     return (
@@ -83,13 +82,14 @@ function CashBookSelectionScreen(): JSX.Element{
                     }}
                 />
                 <Body>
-                    <SafeAreaView>
+                    <SafeAreaView style={{flex:1}}>
                         <FlatList
                             data={data}
                             renderItem={({item}) => {
-                                return <>
-                                    <Text>{item.desction}</Text>
-                                </>
+                                return <SimpleListItem
+                                    icon='check'
+                                    onIconAction={handleSelection} 
+                                    item={{key:item.id,value:item.description}}                                />
                             }}
                             keyExtractor={item => item.id}
                         />

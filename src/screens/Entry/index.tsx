@@ -37,9 +37,9 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import EntryItem from "../../components/EntryItem";
 import { formatNumberToCurrencyStr, formatStringToCurrencyStr } from "../../shared/helpers/currencyHelper";
 
-function EntryScreen({route}):JSX.Element{
+function EntryScreen({ navigation, route }):JSX.Element{
 //states------------------------------------------------------
-    const navigation = useNavigation();
+    // const navigation = useNavigation();
     const { t } = useTranslation();
     const [value, setValue] = useState('');
     const [type,setType] = useState(EntryTypeEnum.INFLOW);
@@ -49,7 +49,6 @@ function EntryScreen({route}):JSX.Element{
     const [cashbook,setCashbook] = useState<Cashbook | null>(null);
     const [entries,setEntries] = useState<Entry[] >([]);
     const [updateOperationId,setUpdateOperationId] = useState < number | null >(null);
-    const selectedCashbook = route.param?.selectedCashbook || null;
 //------------------------------------------------------------
 //inputs------------------------------------------------------
 
@@ -117,7 +116,6 @@ function EntryScreen({route}):JSX.Element{
                 type,
                 cdcashbook: cashbook.id
             }
-            console.log("Saved->",entry);
             EntryService.create(entry).then(res=>{
                 resetInputs();
                 fetchCashbookEntries(cashbook.id);
@@ -150,7 +148,6 @@ function EntryScreen({route}):JSX.Element{
                 type,
                 cdcashbook: cashbook.id
             }
-            console.log("Updated->",entry);
             EntryService.update(entry.id,entry).then(res=>{
                 resetInputs();
                 fetchCashbookEntries(cashbook.id);
@@ -167,6 +164,17 @@ function EntryScreen({route}):JSX.Element{
         setType(EntryTypeEnum.INFLOW);
     }
 
+    const fetchSelectedCashbook = async (id:string):Promise<void> => {
+        try{
+            const cashbook:Cashbook = await CashBookService.find(parseInt(id));
+            if(cashbook){
+                setCashbook(cashbook);
+                fetchCashbookEntries(cashbook.id);
+            }
+        }catch(error){
+            console.log("error->", error);
+        }
+    };
 //------------------------------------------------------------
 //useEffect---------------------------------------------------
     const fetchCashbookEntries = async (cdCashbook:number) =>{
@@ -174,6 +182,7 @@ function EntryScreen({route}):JSX.Element{
             const entries = await EntryService.findByCdCashbook(cdCashbook);
             setEntries(entries);
         }catch(error){
+            setEntries([]);
             console.log(error);
         }
     }
@@ -191,12 +200,18 @@ function EntryScreen({route}):JSX.Element{
                 console.log("error->", error);
             }
         };
-        console.log("Selected cash ->",selectedCashbook)
         fetchLastCashbook();
 
         // Cleanup function
         return () => {};
     }, []);
+
+    useEffect(() => {
+        if(route.params?.selectedCashBookId){
+            fetchSelectedCashbook(route.params?.selectedCashBookId);
+        }
+    }, [route.params?.selectedCashBookId]);
+
 //------------------------------------------------------------
 //helpers-----------------------------------------------------
 
@@ -234,9 +249,9 @@ const getFormatedTotalValue = (): string => {
     return formatNumberToCurrencyStr(fetchTotal());
 }
 
-const navigateToCashbookSelection = (): void =>{
+const navigateToSelectionCashbook = () => {
     navigation.navigate('CashBookSelection');
-}
+};
 
 //------------------------------------------------------------
     return (
@@ -260,7 +275,7 @@ const navigateToCashbookSelection = (): void =>{
                         cashbook ? <Row> 
                             <Title> { cashbook.description } </Title>
                             <ChangeCashbookBtn
-                                onPress={navigateToCashbookSelection}
+                                onPress={navigateToSelectionCashbook}
                             >
                                 <Icon  
                                     name="caret-forward-outline"
