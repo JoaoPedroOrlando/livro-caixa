@@ -1,5 +1,5 @@
 import db from "../SQLiteDataBase";
-
+import {sqliteDateFormatter} from '../../../assets/utils/SQLiteDateFormatter';
 /**
  * INICIALIZAÇÃO DA TABELA
  * - Executa sempre, mas só cria a tabela caso não exista (primeira execução)
@@ -10,7 +10,7 @@ db.transaction((tx) => {
   //<<<<<<<<<<<<<<<<<<<<<<<< USE ISSO APENAS DURANTE OS TESTES!!! >>>>>>>>>>>>>>>>>>>>>>>
 
   tx.executeSql(
-    "CREATE TABLE IF NOT EXISTS cashbooks (id INTEGER PRIMARY KEY AUTOINCREMENT, description TEXT, createdat DATETIME);"
+    "CREATE TABLE IF NOT EXISTS cashbooks (id INTEGER PRIMARY KEY AUTOINCREMENT, description TEXT, createdat DATETIME, updatedat DATETIME);"
   );
 });
 
@@ -26,8 +26,8 @@ const create = (obj) => {
     db.transaction((tx) => {
       //comando SQL modificável
       tx.executeSql(
-        "INSERT INTO cashbooks (description,createdat) values (?,?);",
-        [obj.description,obj.createdAt],
+        "INSERT INTO cashbooks (description,createdat,updatedat) values (?,?,?);",
+        [obj.description,obj.createdat,obj.updatedat],
         //-----------------------
         (_, { rowsAffected, insertId }) => {
           if (rowsAffected > 0) resolve(insertId);
@@ -51,8 +51,8 @@ const update = (id, obj) => {
     db.transaction((tx) => {
       //comando SQL modificável
       tx.executeSql(
-        "UPDATE cashbooks SET description=? WHERE id=?;",
-        [obj.description, id],
+        "UPDATE cashbooks SET description=?, updatedat=? WHERE id=?;",
+        [obj.description,sqliteDateFormatter(new Date()), id],
         //-----------------------
         (_, { rowsAffected }) => {
           if (rowsAffected > 0) resolve(rowsAffected);
@@ -127,7 +127,7 @@ const findLastCashbook = () => {
     db.transaction((tx) => {
       //comando SQL modificável
       tx.executeSql(
-        "SELECT * FROM cashbooks ORDER BY createdat DESC LIMIT 1;",
+        "SELECT * FROM cashbooks ORDER BY updatedat DESC LIMIT 1;",
         [],
         //-----------------------
         (_, { rows }) => {

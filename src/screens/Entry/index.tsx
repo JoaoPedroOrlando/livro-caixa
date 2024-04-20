@@ -126,6 +126,14 @@ function EntryScreen({ navigation, route }):JSX.Element{
         
     }
 
+    const updateCashbookAfterSelection = async(cashbook:Cashbook): Promise<void> => {
+        try{
+            CashBookService.update(cashbook.id,cashbook).then((res)=>{});
+        }catch(error){
+
+        }
+    }
+
     const updateEntry = async():Promise<void> => {
         try{
             const currencyValue = convertCurrencyStringToNumber(value);
@@ -168,8 +176,10 @@ function EntryScreen({ navigation, route }):JSX.Element{
         try{
             const cashbook:Cashbook = await CashBookService.find(parseInt(id));
             if(cashbook){
+                console.log(cashbook)
                 setCashbook(cashbook);
                 fetchCashbookEntries(cashbook.id);
+                updateCashbookAfterSelection(cashbook);
             }
         }catch(error){
             console.log("error->", error);

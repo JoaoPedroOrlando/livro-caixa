@@ -61,7 +61,11 @@ function CashBookScreen(): JSX.Element{
                 }
             }else{ //adicionar
                 if(description){
-                    CashBookService.create({description,createdAt:sqliteDateFormatter(new Date)})
+                    CashBookService.create({
+                        description,
+                        createdat:sqliteDateFormatter(new Date()),
+                        updatedat:sqliteDateFormatter(new Date()),
+                    })
                     .then(cashbook => {
                         fetchData();
                     })
