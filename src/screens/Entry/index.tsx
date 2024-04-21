@@ -93,7 +93,7 @@ function EntryScreen({ navigation, route }):JSX.Element{
         setDescription(entry.description);
         setDate(new Date(entry.dtrecord));
         setType(entry.type);
-        setValue(formatStringToCurrencyStr(entry.value.toString()));
+        setValue(formatNumberToCurrencyStr(entry.value));
     }
 
     
