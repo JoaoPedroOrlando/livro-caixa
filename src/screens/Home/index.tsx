@@ -56,8 +56,15 @@ function HomeScreen(): JSX.Element {
                     <Spacer/>
                     <Row>
                         <HomeCard
+                            icon="book"
+                            title={t('entry')} 
+                            action={() => {
+                                navigation.navigate('Entry');
+                              }}                           
+                        />
+                        <HomeCard
                             icon="plus"
-                            title={t('new')} 
+                            title={t('new-cash-book')} 
                             action={() => {
                                 navigation.navigate('CashBook');
                               }}                           

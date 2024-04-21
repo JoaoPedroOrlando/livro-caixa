@@ -7,7 +7,7 @@ export const MenuItemContainer = styled.View`
 `;
 
 export const MenuDescription = styled.Text`
-    color: ${Colors.primary.darkGray};
+    color: ${Colors.palette.textColor};
     font-size: 15px;
     text-transform: capitalize;
 

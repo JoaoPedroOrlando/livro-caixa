@@ -6,7 +6,7 @@ export const Container = styled.View`
   justify-content: space-between;
   align-items: center;
   padding: 40px 20px 20px 20px;
-  background-color: ${Colors.primary.lightBlue};
+  background-color: ${Colors.palette.header};
 `;
 
 export const Title = styled.Text`

@@ -6,12 +6,16 @@
     "portuguese": "Portuguese",
     "spanish": "Spanish",
     "new":"New",
-    "entry":"entry",
+    "entry":"Entry",
     "entry-value":"Entry value",
     "withdrawal":"withdrawal",
     "description":"description",
     "new-cash-book":"New Cash Book",
     "want-to-delete":"Do you want to delete the register?",
-    "delete":"Delete"
+    "delete":"Delete",
+    "entry-2":"Entry",
+    "incomplete-data":"Incomplete data",
+    "error-saving":"Error saving data",
+    "cash-book-selection":"Cash Book Selection"
 }
   

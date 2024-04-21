@@ -8,7 +8,7 @@ export const ItemContainer = styled.View`
     font-size: 16px;
     line-height: 20px;
     padding: 8px;
-    background-color: ${Colors.primary.lightGray};  
+    background-color: ${Colors.palette.input};  
     display: flex;
     flex-direction: row;
     /* border: 1px solid black; */
@@ -22,7 +22,7 @@ export const TextContainer = styled.View`
 `;
 
 export const Description = styled.Text`
-    color: ${Colors.primary.darkGray};
+    color: ${Colors.palette.textColor};
     text-transform: capitalize;
     font-weight: 500;
     font-size: 18px;
