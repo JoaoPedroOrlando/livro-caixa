@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {  FlatList, Keyboard, ToastAndroid, TouchableWithoutFeedback, View } from "react-native";
 import { Icon } from  "@rneui/themed";
-import { useNavigation, useRoute } from "@react-navigation/native";
 import { useTranslation } from "react-i18next";
 import { RadioButton } from "react-native-paper";
 //db
@@ -80,15 +79,16 @@ function EntryScreen({ navigation, route }):JSX.Element{
     };
 //------------------------------------------------------------
 //CRUD--------------------------------------------------------
-    const onSave = (): void => {
+    const onSaveEntry = (): void => {
         if(updateOperationId !== null){
             updateEntry();
+            setUpdateOperationId(null);
         }else{
             saveEntry();
         }
     }
 
-    const onEdit = (entry:Entry): void => {
+    const onEditEntry = (entry:Entry): void => {
         setUpdateOperationId(entry.id);
         setDescription(entry.description);
         setDate(new Date(entry.dtrecord));
@@ -96,6 +96,7 @@ function EntryScreen({ navigation, route }):JSX.Element{
         setValue(formatStringToCurrencyStr(entry.value.toString()));
     }
 
+    
     const saveEntry = async ():Promise<void> =>{
         try{
             const currencyValue = convertCurrencyStringToNumber(value);
@@ -185,6 +186,19 @@ function EntryScreen({ navigation, route }):JSX.Element{
             console.log("error->", error);
         }
     };
+
+    const deleteEntry = async (id:number):Promise<void> => {
+        try{
+            EntryService
+            .remove(id)
+            .then((res)=>{
+                console.log("Entry deleted ->",res);
+                fetchCashbookEntries(cashbook.id);
+            })
+            .catch( err => console.log(err) )
+        }catch(error){}
+    }
+
 //------------------------------------------------------------
 //useEffect---------------------------------------------------
     const fetchCashbookEntries = async (cdCashbook:number) =>{
@@ -336,7 +350,7 @@ const navigateToSelectionCashbook = () => {
                             </RadioGroupContainer>
                         </RadioButton.Group>
                         <AddBtn 
-                            onPress={onSave}
+                            onPress={onSaveEntry}
                         >
                             <Icon  
                                 name="add"
@@ -357,8 +371,8 @@ const navigateToSelectionCashbook = () => {
                                     item={item}
                                     enableDelete={true}
                                     onPress={()=>{}}
-                                    onDeleteAction={()=>{}}
-                                    onEditAction={onEdit}
+                                    onDeleteAction={deleteEntry}
+                                    onEditAction={onEditEntry}
                                     onLongPress={()=>{}}
                                 />
                             }}

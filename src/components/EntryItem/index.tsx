@@ -32,6 +32,7 @@ function EntryItem(
     const [optionsVisible, setOptionsVisible] = useState(false);
 
     const handleDelete = ()=> {
+        setOptionsVisible(false);
         onDeleteAction(item.id);
     }
 
