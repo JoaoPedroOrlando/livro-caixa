@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { TouchableOpacity } from "react-native";
 import { useTranslation } from "react-i18next";
 import { Icon } from "@rneui/themed";
@@ -20,6 +20,7 @@ import Header from "../../components/Header";
 import Messages from "../../../assets/messages";
 import Colors from "../../../assets/colors";
 import HomeCard from "../../components/HomeCard";
+import TotalBalanceCard from "../../components/TotalBalanceCard";
 
 function HomeScreen(): JSX.Element {
   const navigation = useNavigation();
@@ -68,6 +69,18 @@ function HomeScreen(): JSX.Element {
         />
         <Body>
           <Title>{Messages.appName}</Title>
+          <Spacer />
+          <Row>
+            <TotalBalanceCard
+              icon="book"
+              title={t("entry")}
+              action={() => {
+                navigation.navigate("Entry");
+              }}
+              balance={`${t("balance")} 0,00R$`}
+              date="12/03/2024"
+            />
+          </Row>
         </Body>
         <Footer>
           <Row>
