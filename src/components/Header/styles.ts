@@ -1,5 +1,5 @@
-import styled, {css} from 'styled-components/native';
-import Colors from '../../../assets/colors';
+import styled, { css } from "styled-components/native";
+import Colors from "../../../assets/colors";
 
 export const Container = styled.View`
   flex-direction: row;
@@ -10,7 +10,7 @@ export const Container = styled.View`
 `;
 
 export const Title = styled.Text`
-  color: ${Colors.primary.white};
+  color: ${Colors.palette.btnText};
   font-size: 18px;
   font-weight: bold;
   text-transform: capitalize;
@@ -19,5 +19,5 @@ export const Title = styled.Text`
 export const IconContainer = styled.View``;
 
 export const Spacer = styled.View`
-    margin:25px;
+  margin: 25px;
 `;

@@ -3,16 +3,17 @@ import Colors from "../../../assets/colors";
 
 export const CardContainer = styled.TouchableOpacity<{ disabled: boolean }>`
   height: 100px;
-  flex-basis: 47.5%;
-  background-color: ${props => (props.disabled ? Colors.disable.green : Colors.palette.btnBackground)};
-  border-radius: 10px;
+  flex-basis: 45%;
+  background-color: ${(props) =>
+    props.disabled ? Colors.disable.green : Colors.palette.btnBackground};
+  border-radius: 24px;
   justify-content: center;
   align-items: center;
   margin: 6px 3px;
 `;
 
 export const CardImage = styled.Image`
-  height: 64px;
+  height: 32px;
 `;
 
 export const CardText = styled.Text`
