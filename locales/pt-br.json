@@ -17,5 +17,6 @@
   "incomplete-data": "Informações incompletas",
   "error-saving": "Erro ao salvar Informações",
   "cash-book-selection": "Seleção Livro Caixa",
-  "balance": "Saldo"
+  "balance": "Saldo",
+  "last-entry": "Último lançamento"
 }

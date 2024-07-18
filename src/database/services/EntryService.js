@@ -22,12 +22,19 @@ db.transaction((tx) => {
  *  - Pode retornar erro (reject) caso exista erro no SQL ou nos parâmetros.
  */
 const create = (obj) => {
-  return new Promise((resolve, reject) =>{
+  return new Promise((resolve, reject) => {
     db.transaction((tx) => {
       //comando SQL modificável
       tx.executeSql(
         "INSERT INTO entries (description,value,dtrecord,createdat,cdcashbook,type) values (?,?,?,?,?,?);",
-        [obj.description,obj.value,obj.dtrecord,obj.createdat,obj.cdcashbook,obj.type],
+        [
+          obj.description,
+          obj.value,
+          obj.dtrecord,
+          obj.createdat,
+          obj.cdcashbook,
+          obj.type,
+        ],
         //-----------------------
         (_, { rowsAffected, insertId }) => {
           if (rowsAffected > 0) resolve(insertId);
@@ -52,7 +59,7 @@ const update = (id, obj) => {
       //comando SQL modificável
       tx.executeSql(
         "UPDATE entries SET description=?, value=?, dtrecord=?, type=? WHERE id=?;",
-        [obj.description,obj.value,obj.dtrecord,obj.type, id],
+        [obj.description, obj.value, obj.dtrecord, obj.type, id],
         //-----------------------
         (_, { rowsAffected }) => {
           if (rowsAffected > 0) resolve(rowsAffected);
@@ -236,14 +243,41 @@ const removeByCdCashbook = (cdCashbook) => {
   });
 };
 
+/**
+ * BUSCA DATA DO ÚLTIMO REGISTRO CRIADO POR MEIO DO CD_CASHBOOK
+ * - Recebe o id da tabela CASHBOOK;
+ * - Retorna uma Promise:
+ *  - O resultado da Promise é um array com os objetos encontrados;
+ *  - Pode retornar erro (reject) caso o ID não exista ou então caso ocorra erro no SQL;
+ *  - Pode retornar um array vazio caso nenhum objeto seja encontrado.
+ */
+const finLastCreatedatByCdCashbook = (cdcashbook) => {
+  return new Promise((resolve, reject) => {
+    db.transaction((tx) => {
+      //comando SQL modificável
+      tx.executeSql(
+        "SELECT createdat FROM entries WHERE cdcashbook=? ORDER BY createdat ASC LIMIT 1;",
+        [cdcashbook],
+        //-----------------------
+        (_, { rows }) => {
+          if (rows.length > 0) resolve(rows._array);
+          else reject("Entries not found: cdCashbook=" + cdcashbook); // nenhum registro encontrado
+        },
+        (_, error) => reject(error) // erro interno em tx.executeSql
+      );
+    });
+  });
+};
+
 export default {
   create,
   update,
   find,
   findByDescription,
   findByCdCashbook,
+  finLastCreatedatByCdCashbook,
   all,
   remove,
   removeByCdCashbook,
-  removeAll
+  removeAll,
 };
