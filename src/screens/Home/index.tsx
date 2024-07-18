@@ -148,10 +148,10 @@ function HomeScreen(): JSX.Element {
           <Row>
             {balance && lastEntry && (
               <TotalBalanceCard
-                icon="book"
+                icon="upload"
                 title={t("entry")}
                 action={() => {
-                  navigation.navigate("Entry");
+                  // navigation.navigate("Entry");
                 }}
                 balance={`${t("balance")}: ${balance}`}
                 date={`${t("last-entry")}: ${lastEntry}`}

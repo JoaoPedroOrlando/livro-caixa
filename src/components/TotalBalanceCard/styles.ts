@@ -1,7 +1,7 @@
 import styled from "styled-components/native";
 import Colors from "../../../assets/colors";
 
-export const CardContainer = styled.TouchableOpacity<{ disabled: boolean }>`
+export const CardContainer = styled.View<{ disabled: boolean }>`
   height: 150px;
   flex: 0.7;
   background-color: ${(props) =>

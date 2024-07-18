@@ -1,6 +1,9 @@
 import React from "react";
 import { View } from "react-native";
 import { CardContainer, CardText, RowContent, CardTitle, Row } from "./styles";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import Colors from "../../../assets/colors/index";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 interface ITotalBalanceCardProps {
   title?: string;
@@ -20,9 +23,21 @@ const TotalBalanceCard = ({
   date,
 }: ITotalBalanceCardProps) => {
   return (
-    <CardContainer onPress={action} disabled={disabled}>
+    <CardContainer disabled={disabled}>
       <View style={{ margin: 10 }}></View>
-      <Row>{title && <CardTitle>{title}</CardTitle>}</Row>
+      <Row>
+        {title && <CardTitle>{title}</CardTitle>}
+        {icon && (
+          <TouchableOpacity onPress={action}>
+            <Icon
+              name={icon}
+              style={{ marginRight: 10 }}
+              size={32}
+              color={Colors.primary.white}
+            />
+          </TouchableOpacity>
+        )}
+      </Row>
       <RowContent>{balance && <CardText>{balance}</CardText>}</RowContent>
       <Row>
         <CardText>{date}</CardText>
