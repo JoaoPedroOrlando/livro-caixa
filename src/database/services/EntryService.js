@@ -251,12 +251,12 @@ const removeByCdCashbook = (cdCashbook) => {
  *  - Pode retornar erro (reject) caso o ID não exista ou então caso ocorra erro no SQL;
  *  - Pode retornar um array vazio caso nenhum objeto seja encontrado.
  */
-const finLastCreatedatByCdCashbook = (cdcashbook) => {
+const findLastDtrecordByCdCashbook = (cdcashbook) => {
   return new Promise((resolve, reject) => {
     db.transaction((tx) => {
       //comando SQL modificável
       tx.executeSql(
-        "SELECT createdat FROM entries WHERE cdcashbook=? ORDER BY createdat ASC LIMIT 1;",
+        "SELECT dtrecord FROM entries WHERE cdcashbook=? ORDER BY dtrecord DESC LIMIT 1;",
         [cdcashbook],
         //-----------------------
         (_, { rows }) => {
@@ -275,7 +275,7 @@ export default {
   find,
   findByDescription,
   findByCdCashbook,
-  finLastCreatedatByCdCashbook,
+  findLastDtrecordByCdCashbook,
   all,
   remove,
   removeByCdCashbook,

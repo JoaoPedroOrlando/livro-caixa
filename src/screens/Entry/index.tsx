@@ -121,7 +121,7 @@ function EntryScreen({ navigation, route }): JSX.Element {
       }
       const entry: Entry = {
         description,
-        createdat: sqliteDateFormatter(date),
+        createdat: sqliteDateFormatter(new Date()),
         dtrecord: sqliteDateFormatter(date),
         value: currencyValue,
         type,

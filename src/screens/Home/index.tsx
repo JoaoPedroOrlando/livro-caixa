@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { TouchableOpacity } from "react-native";
 import { useTranslation } from "react-i18next";
 import { Icon } from "@rneui/themed";
 import { Modal, PaperProvider, Portal } from "react-native-paper";
 import i18next from "i18next";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
 //db
 import CashBookService from "../../database/services/CashBookService";
 import EntryService from "../../database/services/EntryService";
@@ -32,7 +32,7 @@ import { formatNumberToCurrencyStr } from "../../shared/helpers/currencyHelper";
 function HomeScreen(): JSX.Element {
   const navigation = useNavigation();
   const { t } = useTranslation();
-  const [visible, setModalVisible] = React.useState(false);
+  const [visible, setModalVisible] = useState(false);
 
   const [cashbook, setCashbook] = useState<Cashbook | null>(null);
   const [entries, setEntries] = useState<Entry[]>([]);
@@ -47,61 +47,66 @@ function HomeScreen(): JSX.Element {
     setModalVisible(false);
   }
 
+  const fetchLastCashbook = async (): Promise<void> => {
+    try {
+      const lastCashbook: Cashbook = await CashBookService.findLastCashbook();
+      if (lastCashbook) {
+        setCashbook(lastCashbook);
+        fetchCashbookEntries(lastCashbook.id);
+      }
+    } catch (error) {
+      console.log("error->", error);
+    }
+  };
+
+  const fetchCashbookEntries = async (cdCashbook: number) => {
+    try {
+      const entries = await EntryService.findByCdCashbook(cdCashbook);
+      await fetchLastEntryDate(cdCashbook);
+      if (entries) {
+        //console.log(entries);
+        setEntries(entries);
+        const total = formatNumberToCurrencyStr(fetchTotal(entries));
+        //console.log(total);
+        setBalance(total.toString());
+      }
+    } catch (error) {
+      setEntries([]);
+      console.log(error);
+    }
+  };
+
+  const fetchLastEntryDate = async (cdCashbook: number) => {
+    try {
+      const date = await EntryService.findLastDtrecordByCdCashbook(cdCashbook);
+      if (date) {
+        const dateStr = formatStrDate(date[0]["dtrecord"]);
+        setLastEntry(dateStr);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const fetchTotal = (entries: Entry[]): number => {
+    return entries.reduce((total, entry) => {
+      if (entry.type === EntryTypeEnum.INFLOW) {
+        return total + entry.value;
+      } else {
+        return total - entry.value;
+      }
+    }, 0);
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchLastCashbook();
+      return () => {};
+    }, [navigation])
+  );
+
   useEffect(() => {
-    const fetchLastCashbook = async (): Promise<void> => {
-      try {
-        const lastCashbook: Cashbook = await CashBookService.findLastCashbook();
-        if (lastCashbook) {
-          setCashbook(lastCashbook);
-          fetchCashbookEntries(lastCashbook.id);
-        }
-      } catch (error) {
-        console.log("error->", error);
-      }
-    };
-
-    const fetchCashbookEntries = async (cdCashbook: number) => {
-      try {
-        const entries = await EntryService.findByCdCashbook(cdCashbook);
-        await fetchLastEntryDate(cdCashbook);
-        if (entries) {
-          setEntries(entries);
-          const total = formatNumberToCurrencyStr(fetchTotal());
-          setBalance(total.toString());
-        }
-      } catch (error) {
-        setEntries([]);
-        console.log(error);
-      }
-    };
-
-    const fetchLastEntryDate = async (cdCashbook: number) => {
-      try {
-        const date = await EntryService.finLastCreatedatByCdCashbook(
-          cdCashbook
-        );
-        if (date) {
-          const dateStr = formatStrDate(date[0]["createdat"]);
-          setLastEntry(dateStr);
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    const fetchTotal = (): number => {
-      return entries.reduce((total, entry) => {
-        if (entry.type === EntryTypeEnum.INFLOW) {
-          return total + entry.value;
-        } else {
-          return total - entry.value;
-        }
-      }, 0);
-    };
-
     fetchLastCashbook();
-
-    // Cleanup function
     return () => {};
   }, []);
 
@@ -141,15 +146,17 @@ function HomeScreen(): JSX.Element {
           <Title>{Messages.appName}</Title>
           <Spacer />
           <Row>
-            <TotalBalanceCard
-              icon="book"
-              title={t("entry")}
-              action={() => {
-                navigation.navigate("Entry");
-              }}
-              balance={`${t("balance")}: ${balance}`}
-              date={`${t("last-entry")}: ${lastEntry}`}
-            />
+            {balance && lastEntry && (
+              <TotalBalanceCard
+                icon="book"
+                title={t("entry")}
+                action={() => {
+                  navigation.navigate("Entry");
+                }}
+                balance={`${t("balance")}: ${balance}`}
+                date={`${t("last-entry")}: ${lastEntry}`}
+              />
+            )}
           </Row>
         </Body>
         <Footer>
