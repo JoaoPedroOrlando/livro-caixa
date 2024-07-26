@@ -8,6 +8,7 @@ import { useNavigation, useFocusEffect } from "@react-navigation/native";
 //db
 import CashBookService from "../../database/services/CashBookService";
 import EntryService from "../../database/services/EntryService";
+import exportEntriesToCSV from "../../database/services/ExportEntriesToCsv";
 //local
 import {
   Container,
@@ -149,9 +150,9 @@ function HomeScreen(): JSX.Element {
             {balance && lastEntry && (
               <TotalBalanceCard
                 icon="upload"
-                title={t("entry")}
-                action={() => {
-                  // navigation.navigate("Entry");
+                title={cashbook.description}
+                action={async () => {
+                  await exportEntriesToCSV(cashbook.id);
                 }}
                 balance={`${t("balance")}: ${balance}`}
                 date={`${t("last-entry")}: ${lastEntry}`}
