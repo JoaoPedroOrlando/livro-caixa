@@ -18,5 +18,7 @@
   "error-saving": "Erro ao salvar Informações",
   "cash-book-selection": "Seleção Livro Caixa",
   "balance": "Saldo",
-  "last-entry": "Último lançamento"
+  "last-entry": "Último lançamento",
+  "import-entries-from-csv": "Importar lançamentos csv",
+  "data": "dados"
 }

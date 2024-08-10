@@ -18,5 +18,7 @@
   "error-saving": "Error saving data",
   "cash-book-selection": "Cash Book Selection",
   "balance": "Balance",
-  "last-entry": "Last entry"
+  "last-entry": "Last entry",
+  "import-entries-from-csv": "Import entries from csv",
+  "data": "data"
 }

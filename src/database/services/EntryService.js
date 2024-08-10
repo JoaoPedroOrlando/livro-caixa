@@ -10,7 +10,7 @@ db.transaction((tx) => {
   //<<<<<<<<<<<<<<<<<<<<<<<< USE ISSO APENAS DURANTE OS TESTES!!! >>>>>>>>>>>>>>>>>>>>>>>
 
   tx.executeSql(
-    "CREATE TABLE IF NOT EXISTS entries (id INTEGER PRIMARY KEY AUTOINCREMENT,description TEXT, value REAL, dtrecord DATETIME, createdat DATETIME, cdcashbook INTEGER, type TEXT);"
+    "CREATE TABLE IF NOT EXISTS entries (id INTEGER PRIMARY KEY AUTOINCREMENT,description TEXT, value REAL, dtrecord DATETIME, createdat DATETIME, cdcashbook INTEGER, type TEXT, updatedat DATETIME);"
   );
 });
 
@@ -34,6 +34,7 @@ const create = (obj) => {
           obj.createdat,
           obj.cdcashbook,
           obj.type,
+          obj.updateat,
         ],
         //-----------------------
         (_, { rowsAffected, insertId }) => {

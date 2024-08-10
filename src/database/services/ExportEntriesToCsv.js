@@ -22,12 +22,12 @@ const fetchEntriesByCdCashbook = (cdcashbook) => {
 const convertEntriesToCSV = (entries) => {
   try {
     const headers = [
-      "identificador",
+      "identificador_lancamento",
       "descrição",
       "valor",
       "data lançamento",
       "data criação",
-      "identificador ",
+      "identificador_livro_caixa",
       "tipo",
     ];
     const data = entries.map((entry) => [

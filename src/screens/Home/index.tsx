@@ -2,24 +2,16 @@ import React, { useEffect, useState, useCallback } from "react";
 import { TouchableOpacity } from "react-native";
 import { useTranslation } from "react-i18next";
 import { Icon } from "@rneui/themed";
-import { Modal, PaperProvider, Portal } from "react-native-paper";
+import { Modal, PaperProvider, Portal, List } from "react-native-paper";
 import i18next from "i18next";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 //db
 import CashBookService from "../../database/services/CashBookService";
 import EntryService from "../../database/services/EntryService";
 import exportEntriesToCSV from "../../database/services/ExportEntriesToCsv";
+import importEntriesFromCsv from "../../database/services/ImportEntriesFromCsv";
 //local
-import {
-  Container,
-  Body,
-  ModalTitle,
-  ModalText,
-  Spacer,
-  Row,
-  Footer,
-  Title,
-} from "./styles";
+import { Container, Body, Spacer, Row, Footer, Title } from "./styles";
 import Header from "../../components/Header";
 import Messages from "../../../assets/messages";
 import Colors from "../../../assets/colors";
@@ -34,6 +26,8 @@ function HomeScreen(): JSX.Element {
   const navigation = useNavigation();
   const { t } = useTranslation();
   const [visible, setModalVisible] = useState(false);
+  const [showLanguage, setShowLanguage] = useState(false);
+  const [showImport, setShowImport] = useState(false);
 
   const [cashbook, setCashbook] = useState<Cashbook | null>(null);
   const [entries, setEntries] = useState<Entry[]>([]);
@@ -42,6 +36,8 @@ function HomeScreen(): JSX.Element {
 
   const showModal = () => setModalVisible(true);
   const hideModal = () => setModalVisible(false);
+  const handleLanguageAccordion = () => setShowLanguage(!showLanguage);
+  const handleImportAccordion = () => setShowImport(!showImport);
 
   function changeLanguage(lng: string): void {
     i18next.changeLanguage(lng);
@@ -119,16 +115,62 @@ function HomeScreen(): JSX.Element {
           onDismiss={hideModal}
           contentContainerStyle={modalContainerStyle}
         >
-          <ModalTitle>{t("language")} :</ModalTitle>
-          <TouchableOpacity onPress={() => changeLanguage("en")}>
-            <ModalText>{t("english")}</ModalText>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => changeLanguage("ptBr")}>
-            <ModalText>{t("portuguese")}</ModalText>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => changeLanguage("es")}>
-            <ModalText>{t("spanish")}</ModalText>
-          </TouchableOpacity>
+          <List.Section style={{ backgroundColor: Colors.palette.bkColor }}>
+            <List.Accordion
+              title={t("language")}
+              titleStyle={{ color: Colors.palette.btnText }}
+              rippleColor={Colors.palette.btnText}
+              left={(props) => (
+                <List.Icon
+                  {...props}
+                  icon="flag"
+                  color={Colors.palette.btnText}
+                />
+              )}
+              expanded={showLanguage}
+              onPress={handleLanguageAccordion}
+              style={{ backgroundColor: Colors.palette.bkColor }}
+            >
+              <List.Item
+                title={t("english")}
+                onPress={() => changeLanguage("en")}
+              />
+              <List.Item
+                title={t("portuguese")}
+                onPress={() => changeLanguage("ptBr")}
+              />
+              <List.Item
+                title={t("spanish")}
+                onPress={() => changeLanguage("es")}
+              />
+            </List.Accordion>
+
+            <List.Accordion
+              title={t("data")}
+              titleStyle={{
+                color: Colors.palette.btnText,
+                textTransform: "capitalize",
+              }}
+              left={(props) => (
+                <List.Icon
+                  {...props}
+                  icon="upload"
+                  color={Colors.palette.btnText}
+                />
+              )}
+              expanded={showImport}
+              onPress={handleImportAccordion}
+              style={{ backgroundColor: Colors.palette.bkColor }}
+              rippleColor={Colors.palette.btnText}
+            >
+              <List.Item
+                title={t("import-entries-from-csv")}
+                onPress={async () => {
+                  await importEntriesFromCsv();
+                }}
+              />
+            </List.Accordion>
+          </List.Section>
         </Modal>
       </Portal>
       <Container>
