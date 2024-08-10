@@ -30,54 +30,28 @@ const importEntriesFromCsv = async () => {
 const insertDataIntoSQLite = async (data) => {
   // Pula o header
   const rows = data.slice(1);
-  const cashbookid = parseInt(rows[0][5]);
-  // deleta entrda com mesmo cdCashbook
-  //const delRes = await EntryService.removeByCdCashbook(cashbookid);
   try {
-    const cashbook = await CashbookService.create({
-      description: `cashbook${formatDateToString(new Date())}`,
+    const cashbookid = await CashbookService.create({
+      description: `cashbook ${formatDateToString(new Date())}`,
       createdat: sqliteDateFormatter(new Date()),
       updatedat: sqliteDateFormatter(new Date()),
     });
-    console.log(cashbook);
-    for (let entry of rows) {
-      // const savedEntry = await EntryService.create(
-      //   {
-      //     description:,
-      //     value,
-      //     dtrecord,
-      //     createdat,
-      //     cdcashbook,
-      //     type,
-      //   }
-      // )
+    console.log(cashbookid);
+    console.log(rows);
+    for (let row of rows) {
+      await EntryService.create({
+        description: row[1],
+        value: parseFloat(row[2]),
+        dtrecord: row[3],
+        createdat: row[4],
+        cdcashbook: cashbookid,
+        type: row[5],
+        updatedat: row[6],
+      });
     }
   } catch (e) {
     console.log("caiu aqui", e);
   }
-
-  db.transaction((tx) => {
-    // rows.forEach((entry) => {
-    //   tx.executeSql(
-    //     `INSERT INTO entries (identificador, descricao, valor, data_lancamento, data_criacao, identificador2, tipo) VALUES (?, ?, ?, ?, ?, ?, ?)`,
-    //     [
-    //       parseInt(entry[0]),
-    //       entry[1],
-    //       parseFloat(entry[2]),
-    //       entry[3],
-    //       entry[4],
-    //       parseInt(entry[5]),
-    //       entry[6],
-    //     ],
-    //     (tx, result) => {
-    //       console.log("Insert successful", result);
-    //     },
-    //     (tx, error) => {
-    //       console.error("Insert error", error);
-    //     }
-    //   );
-    // });
-  });
 };
 
 export default importEntriesFromCsv;

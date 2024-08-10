@@ -1,5 +1,5 @@
 import db from "../SQLiteDataBase";
-import {sqliteDateFormatter} from '../../../assets/utils/SQLiteDateFormatter';
+import { sqliteDateFormatter } from "../../../assets/utils/SQLiteDateFormatter";
 /**
  * INICIALIZAÇÃO DA TABELA
  * - Executa sempre, mas só cria a tabela caso não exista (primeira execução)
@@ -22,12 +22,12 @@ db.transaction((tx) => {
  *  - Pode retornar erro (reject) caso exista erro no SQL ou nos parâmetros.
  */
 const create = (obj) => {
-  return new Promise((resolve, reject) =>{
+  return new Promise((resolve, reject) => {
     db.transaction((tx) => {
       //comando SQL modificável
       tx.executeSql(
         "INSERT INTO cashbooks (description,createdat,updatedat) values (?,?,?);",
-        [obj.description,obj.createdat,obj.updatedat],
+        [obj.description, obj.createdat, obj.updatedat],
         //-----------------------
         (_, { rowsAffected, insertId }) => {
           if (rowsAffected > 0) resolve(insertId);
@@ -52,7 +52,7 @@ const update = (id, obj) => {
       //comando SQL modificável
       tx.executeSql(
         "UPDATE cashbooks SET description=?, updatedat=? WHERE id=?;",
-        [obj.description,sqliteDateFormatter(new Date()), id],
+        [obj.description, sqliteDateFormatter(new Date()), id],
         //-----------------------
         (_, { rowsAffected }) => {
           if (rowsAffected > 0) resolve(rowsAffected);
@@ -219,5 +219,5 @@ export default {
   findLastCashbook,
   all,
   remove,
-  removeAll
+  removeAll,
 };

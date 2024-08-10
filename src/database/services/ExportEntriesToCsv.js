@@ -22,13 +22,13 @@ const fetchEntriesByCdCashbook = (cdcashbook) => {
 const convertEntriesToCSV = (entries) => {
   try {
     const headers = [
-      "identificador_lancamento",
-      "descrição",
-      "valor",
-      "data lançamento",
-      "data criação",
-      "identificador_livro_caixa",
-      "tipo",
+      "entry_id",
+      "description",
+      "value",
+      "dt_record",
+      "created_at",
+      "type",
+      "updated_at",
     ];
     const data = entries.map((entry) => [
       entry.id,
@@ -36,8 +36,8 @@ const convertEntriesToCSV = (entries) => {
       entry.value,
       entry.dtrecord,
       entry.createdat,
-      entry.cdcashbook,
       entry.type,
+      entry.updatedat,
     ]);
     const dataToCSV = {
       fields: headers,

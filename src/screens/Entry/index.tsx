@@ -126,6 +126,7 @@ function EntryScreen({ navigation, route }): JSX.Element {
         value: currencyValue,
         type,
         cdcashbook: cashbook.id,
+        updatedat: sqliteDateFormatter(new Date()),
       };
       EntryService.create(entry)
         .then((res) => {
@@ -164,11 +165,11 @@ function EntryScreen({ navigation, route }): JSX.Element {
       const entry: Entry = {
         id: updateOperationId,
         description,
-        createdat: sqliteDateFormatter(date),
         dtrecord: sqliteDateFormatter(date),
         value: currencyValue,
         type,
         cdcashbook: cashbook.id,
+        updatedat: sqliteDateFormatter(new Date()),
       };
       EntryService.update(entry.id, entry)
         .then((res) => {

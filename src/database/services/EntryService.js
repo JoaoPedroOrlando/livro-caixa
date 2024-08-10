@@ -26,7 +26,7 @@ const create = (obj) => {
     db.transaction((tx) => {
       //comando SQL modificável
       tx.executeSql(
-        "INSERT INTO entries (description,value,dtrecord,createdat,cdcashbook,type) values (?,?,?,?,?,?);",
+        "INSERT INTO entries (description,value,dtrecord,createdat,cdcashbook,type,updatedat) values (?,?,?,?,?,?,?);",
         [
           obj.description,
           obj.value,
@@ -34,7 +34,7 @@ const create = (obj) => {
           obj.createdat,
           obj.cdcashbook,
           obj.type,
-          obj.updateat,
+          obj.updatedat,
         ],
         //-----------------------
         (_, { rowsAffected, insertId }) => {
@@ -59,8 +59,8 @@ const update = (id, obj) => {
     db.transaction((tx) => {
       //comando SQL modificável
       tx.executeSql(
-        "UPDATE entries SET description=?, value=?, dtrecord=?, type=? WHERE id=?;",
-        [obj.description, obj.value, obj.dtrecord, obj.type, id],
+        "UPDATE entries SET description=?, value=?, dtrecord=?, type=?, updatedat=? WHERE id=?;",
+        [obj.description, obj.value, obj.dtrecord, obj.type, obj.updatedat, id],
         //-----------------------
         (_, { rowsAffected }) => {
           if (rowsAffected > 0) resolve(rowsAffected);

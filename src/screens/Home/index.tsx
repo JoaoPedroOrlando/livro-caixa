@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { TouchableOpacity } from "react-native";
 import { useTranslation } from "react-i18next";
 import { Icon } from "@rneui/themed";
 import { Modal, PaperProvider, Portal, List } from "react-native-paper";
@@ -52,6 +51,10 @@ function HomeScreen(): JSX.Element {
         fetchCashbookEntries(lastCashbook.id);
       }
     } catch (error) {
+      setBalance(null);
+      setLastEntry(null);
+      setCashbook(null);
+      setEntries(null);
       console.log("error->", error);
     }
   };
@@ -167,6 +170,7 @@ function HomeScreen(): JSX.Element {
                 title={t("import-entries-from-csv")}
                 onPress={async () => {
                   await importEntriesFromCsv();
+                  await fetchLastCashbook();
                 }}
               />
             </List.Accordion>
