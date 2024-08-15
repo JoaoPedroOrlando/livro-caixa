@@ -20,5 +20,6 @@
   "balance": "Balance",
   "last-entry": "Last entry",
   "import-entries-from-csv": "Import entries from csv",
-  "data": "data"
+  "data": "data",
+  "cash-book": "Cash Book"
 }

@@ -1,5 +1,5 @@
 const Messages = {
-    appName:"Livro Caixa"
-}
+  appName: "cash-book",
+};
 
 export default Messages;

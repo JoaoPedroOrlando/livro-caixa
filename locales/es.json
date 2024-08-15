@@ -20,5 +20,6 @@
   "balance": "Saldo",
   "last-entry": "Último lanzamiento",
   "import-entries-from-csv": "Importar entradas csv",
-  "data": "datos"
+  "data": "datos",
+  "cash-book": "Libro de Caja"
 }

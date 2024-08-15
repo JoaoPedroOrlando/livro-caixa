@@ -190,7 +190,7 @@ function HomeScreen(): JSX.Element {
           onRightIconPressed={showModal}
         />
         <Body>
-          <Title>{Messages.appName}</Title>
+          <Title>{`${t(Messages.appName)}`}</Title>
           <Spacer />
           <Row>
             {balance && lastEntry && (
