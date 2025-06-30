@@ -1,18 +1,29 @@
 import db from "../SQLiteDataBase";
 import { sqliteDateFormatter } from "../../../assets/utils/SQLiteDateFormatter";
+
 /**
  * INICIALIZAÇÃO DA TABELA
  * - Executa sempre, mas só cria a tabela caso não exista (primeira execução)
  */
-db.transaction((tx) => {
+const initializeTable = async () => {
+  const database = await db;
+
   //<<<<<<<<<<<<<<<<<<<<<<<< USE ISSO APENAS DURANTE OS TESTES!!! >>>>>>>>>>>>>>>>>>>>>>>
-  //tx.executeSql("DROP TABLE cashbooks;");
+  // await database.execAsync("DROP TABLE IF EXISTS cashbooks;");
   //<<<<<<<<<<<<<<<<<<<<<<<< USE ISSO APENAS DURANTE OS TESTES!!! >>>>>>>>>>>>>>>>>>>>>>>
 
-  tx.executeSql(
-    "CREATE TABLE IF NOT EXISTS cashbooks (id INTEGER PRIMARY KEY AUTOINCREMENT, description TEXT, createdat DATETIME, updatedat DATETIME);"
-  );
-});
+  await database.execAsync(`
+    CREATE TABLE IF NOT EXISTS cashbooks (
+      id INTEGER PRIMARY KEY AUTOINCREMENT, 
+      description TEXT, 
+      createdat DATETIME, 
+      updatedat DATETIME
+    );
+  `);
+};
+
+// Initialize table when module loads
+initializeTable().catch(console.error);
 
 /**
  * CRIAÇÃO DE UM NOVO REGISTRO
@@ -21,22 +32,22 @@ db.transaction((tx) => {
  *  - O resultado da Promise é o ID do registro (criado por AUTOINCREMENT)
  *  - Pode retornar erro (reject) caso exista erro no SQL ou nos parâmetros.
  */
-const create = (obj) => {
-  return new Promise((resolve, reject) => {
-    db.transaction((tx) => {
-      //comando SQL modificável
-      tx.executeSql(
-        "INSERT INTO cashbooks (description,createdat,updatedat) values (?,?,?);",
-        [obj.description, obj.createdat, obj.updatedat],
-        //-----------------------
-        (_, { rowsAffected, insertId }) => {
-          if (rowsAffected > 0) resolve(insertId);
-          else reject("Error inserting obj: " + JSON.stringify(obj)); // insert falhou
-        },
-        (_, error) => reject(error) // erro interno em tx.executeSql
-      );
-    });
-  });
+const create = async (obj) => {
+  try {
+    const database = await db;
+    const result = await database.runAsync(
+      "INSERT INTO cashbooks (description, createdat, updatedat) VALUES (?, ?, ?);",
+      [obj.description, obj.createdat, obj.updatedat]
+    );
+
+    if (result.changes > 0) {
+      return result.lastInsertRowId;
+    } else {
+      throw new Error("Error inserting obj: " + JSON.stringify(obj));
+    }
+  } catch (error) {
+    throw error;
+  }
 };
 
 /**
@@ -46,22 +57,22 @@ const create = (obj) => {
  *  - O resultado da Promise é a quantidade de registros atualizados;
  *  - Pode retornar erro (reject) caso o ID não exista ou então caso ocorra erro no SQL.
  */
-const update = (id, obj) => {
-  return new Promise((resolve, reject) => {
-    db.transaction((tx) => {
-      //comando SQL modificável
-      tx.executeSql(
-        "UPDATE cashbooks SET description=?, updatedat=? WHERE id=?;",
-        [obj.description, sqliteDateFormatter(new Date()), id],
-        //-----------------------
-        (_, { rowsAffected }) => {
-          if (rowsAffected > 0) resolve(rowsAffected);
-          else reject("Error updating obj: id=" + id); // nenhum registro alterado
-        },
-        (_, error) => reject(error) // erro interno em tx.executeSql
-      );
-    });
-  });
+const update = async (id, obj) => {
+  try {
+    const database = await db;
+    const result = await database.runAsync(
+      "UPDATE cashbooks SET description=?, updatedat=? WHERE id=?;",
+      [obj.description, sqliteDateFormatter(new Date()), id]
+    );
+
+    if (result.changes > 0) {
+      return result.changes;
+    } else {
+      throw new Error("Error updating obj: id=" + id);
+    }
+  } catch (error) {
+    throw error;
+  }
 };
 
 /**
@@ -71,22 +82,22 @@ const update = (id, obj) => {
  *  - O resultado da Promise é o objeto (caso exista);
  *  - Pode retornar erro (reject) caso o ID não exista ou então caso ocorra erro no SQL.
  */
-const find = (id) => {
-  return new Promise((resolve, reject) => {
-    db.transaction((tx) => {
-      //comando SQL modificável
-      tx.executeSql(
-        "SELECT * FROM cashbooks WHERE id=?;",
-        [id],
-        //-----------------------
-        (_, { rows }) => {
-          if (rows.length > 0) resolve(rows._array[0]);
-          else reject("Obj not found: id=" + id); // nenhum registro encontrado
-        },
-        (_, error) => reject(error) // erro interno em tx.executeSql
-      );
-    });
-  });
+const find = async (id) => {
+  try {
+    const database = await db;
+    const result = await database.getFirstAsync(
+      "SELECT * FROM cashbooks WHERE id=?;",
+      [id]
+    );
+
+    if (result) {
+      return result;
+    } else {
+      throw new Error("Obj not found: id=" + id);
+    }
+  } catch (error) {
+    throw error;
+  }
 };
 
 /**
@@ -97,22 +108,22 @@ const find = (id) => {
  *  - Pode retornar erro (reject) caso o ID não exista ou então caso ocorra erro no SQL;
  *  - Pode retornar um array vazio caso nenhum objeto seja encontrado.
  */
-const findByDescription = (description) => {
-  return new Promise((resolve, reject) => {
-    db.transaction((tx) => {
-      //comando SQL modificável
-      tx.executeSql(
-        "SELECT * FROM cashbooks WHERE description LIKE ?;",
-        [description],
-        //-----------------------
-        (_, { rows }) => {
-          if (rows.length > 0) resolve(rows._array);
-          else reject("Obj not found: description=" + description); // nenhum registro encontrado
-        },
-        (_, error) => reject(error) // erro interno em tx.executeSql
-      );
-    });
-  });
+const findByDescription = async (description) => {
+  try {
+    const database = await db;
+    const result = await database.getAllAsync(
+      "SELECT * FROM cashbooks WHERE description LIKE ?;",
+      [description]
+    );
+
+    if (result.length > 0) {
+      return result;
+    } else {
+      throw new Error("Obj not found: description=" + description);
+    }
+  } catch (error) {
+    throw error;
+  }
 };
 
 /**
@@ -122,22 +133,21 @@ const findByDescription = (description) => {
  *  - Pode retornar erro (reject) caso o ID não exista ou então caso ocorra erro no SQL;
  *  - Pode retornar um array vazio caso nenhum objeto seja encontrado.
  */
-const findLastCashbook = () => {
-  return new Promise((resolve, reject) => {
-    db.transaction((tx) => {
-      //comando SQL modificável
-      tx.executeSql(
-        "SELECT * FROM cashbooks ORDER BY updatedat DESC LIMIT 1;",
-        [],
-        //-----------------------
-        (_, { rows }) => {
-          if (rows.length > 0) resolve(rows._array[0]);
-          else reject("No regsiters found: "); // nenhum registro encontrado
-        },
-        (_, error) => reject(error) // erro interno em tx.executeSql
-      );
-    });
-  });
+const findLastCashbook = async () => {
+  try {
+    const database = await db;
+    const result = await database.getFirstAsync(
+      "SELECT * FROM cashbooks ORDER BY updatedat DESC LIMIT 1;"
+    );
+
+    if (result) {
+      return result;
+    } else {
+      throw new Error("No registers found");
+    }
+  } catch (error) {
+    throw error;
+  }
 };
 
 /**
@@ -148,19 +158,14 @@ const findLastCashbook = () => {
  *  - Pode retornar erro (reject) caso o ID não exista ou então caso ocorra erro no SQL;
  *  - Pode retornar um array vazio caso não existam registros.
  */
-const all = () => {
-  return new Promise((resolve, reject) => {
-    db.transaction((tx) => {
-      //comando SQL modificável
-      tx.executeSql(
-        "SELECT * FROM cashbooks;",
-        [],
-        //-----------------------
-        (_, { rows }) => resolve(rows._array),
-        (_, error) => reject(error) // erro interno em tx.executeSql
-      );
-    });
-  });
+const all = async () => {
+  try {
+    const database = await db;
+    const result = await database.getAllAsync("SELECT * FROM cashbooks;");
+    return result;
+  } catch (error) {
+    throw error;
+  }
 };
 
 /**
@@ -170,21 +175,17 @@ const all = () => {
  *  - O resultado da Promise a quantidade de registros removidos (zero indica que nada foi removido);
  *  - Pode retornar erro (reject) caso o ID não exista ou então caso ocorra erro no SQL.
  */
-const remove = (id) => {
-  return new Promise((resolve, reject) => {
-    db.transaction((tx) => {
-      //comando SQL modificável
-      tx.executeSql(
-        "DELETE FROM cashbooks WHERE id=?;",
-        [id],
-        //-----------------------
-        (_, { rowsAffected }) => {
-          resolve(rowsAffected);
-        },
-        (_, error) => reject(error) // erro interno em tx.executeSql
-      );
-    });
-  });
+const remove = async (id) => {
+  try {
+    const database = await db;
+    const result = await database.runAsync(
+      "DELETE FROM cashbooks WHERE id=?;",
+      [id]
+    );
+    return result.changes;
+  } catch (error) {
+    throw error;
+  }
 };
 
 /**
@@ -194,21 +195,14 @@ const remove = (id) => {
  *  - O resultado da Promise a quantidade de registros removidos (zero indica que nada foi removido);
  *  - Pode retornar erro (reject) caso ocorra erro no SQL.
  */
-const removeAll = () => {
-  return new Promise((resolve, reject) => {
-    db.transaction((tx) => {
-      //comando SQL modificável
-      tx.executeSql(
-        "DELETE FROM cashbooks;",
-        [],
-        //-----------------------
-        (_, { rowsAffected }) => {
-          resolve(rowsAffected);
-        },
-        (_, error) => reject(error) // erro interno em tx.executeSql
-      );
-    });
-  });
+const removeAll = async () => {
+  try {
+    const database = await db;
+    const result = await database.runAsync("DELETE FROM cashbooks;");
+    return result.changes;
+  } catch (error) {
+    throw error;
+  }
 };
 
 export default {

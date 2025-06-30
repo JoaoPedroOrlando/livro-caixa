@@ -1,4 +1,3 @@
-import db from "../SQLiteDataBase";
 import * as FileSystem from "expo-file-system";
 import { readString } from "react-native-csv";
 import * as DocumentPicker from "expo-document-picker";

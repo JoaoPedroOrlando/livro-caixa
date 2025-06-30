@@ -3,20 +3,22 @@ import * as FileSystem from "expo-file-system";
 import * as Sharing from "expo-sharing";
 import { jsonToCSV } from "react-native-csv";
 
-const fetchEntriesByCdCashbook = (cdcashbook) => {
-  return new Promise((resolve, reject) => {
-    db.transaction((tx) => {
-      tx.executeSql(
-        "SELECT * FROM entries WHERE cdcashbook=? ORDER BY dtrecord ASC;",
-        [cdcashbook],
-        (_, { rows }) => {
-          if (rows.length > 0) resolve(rows._array);
-          else reject("Entries not found: cdCashbook=" + cdcashbook);
-        },
-        (_, error) => reject(error)
-      );
-    });
-  });
+const fetchEntriesByCdCashbook = async (cdcashbook) => {
+  try {
+    const database = await db;
+    const result = await database.getAllAsync(
+      "SELECT * FROM entries WHERE cdcashbook=? ORDER BY dtrecord ASC;",
+      [cdcashbook]
+    );
+
+    if (result.length > 0) {
+      return result;
+    } else {
+      throw new Error("Entries not found: cdCashbook=" + cdcashbook);
+    }
+  } catch (error) {
+    throw error;
+  }
 };
 
 const convertEntriesToCSV = (entries) => {
@@ -47,6 +49,7 @@ const convertEntriesToCSV = (entries) => {
     return jsonToCSV(dataToCSV, { header: true });
   } catch (e) {
     console.log("error", e);
+    throw e;
   }
 };
 
@@ -56,10 +59,11 @@ const saveCSVFile = async (csvData, fileName) => {
     await FileSystem.writeAsStringAsync(filePath, csvData, {
       encoding: FileSystem.EncodingType.UTF8,
     });
-    Sharing.shareAsync(filePath);
-    return null;
+    await Sharing.shareAsync(filePath);
+    return filePath;
   } catch (e) {
     console.log("error", e);
+    throw e;
   }
 };
 
@@ -68,8 +72,10 @@ const exportEntriesToCSV = async (cdcashbook) => {
     const entries = await fetchEntriesByCdCashbook(cdcashbook);
     const csvData = convertEntriesToCSV(entries);
     const fileUri = await saveCSVFile(csvData, `entries.csv`);
+    return fileUri;
   } catch (error) {
     console.error(error);
+    throw error;
   }
 };
 
